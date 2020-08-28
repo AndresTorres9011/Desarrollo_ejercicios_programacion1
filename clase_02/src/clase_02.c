@@ -22,7 +22,7 @@ int main(void) {
 	int contador=0;
 	float promedio;
 
-	while(1)
+	do
 	{
 		printf("Ingrese un numero: ");
 		fflush(stdin);
@@ -32,11 +32,8 @@ int main(void) {
 			acumulador=acumulador+numero;
 			contador= contador+1;
 		}
-		else
-		{
-			break;
-		}
-	}
+
+	}while(numero!=999);
 	promedio = (float)acumulador/contador;
 	printf("\nEl promedio es : %.2f",promedio);
 	return EXIT_SUCCESS;

@@ -18,35 +18,35 @@ caso contrario 	--> return -1
 #include <stdio.h>
 #include <stdlib.h>
 
-float sumaEnteros(float operador1, float operador2, float *resultado);
-float restaEnteros(float operador1, float operador2, float *resultado);
-float multiplicacionEnteros(float operador1, float operador2, float *resultado);
-float divisionEnteros(float operador1, float operador2, float *resultado);
+float sumaEnteros(int operador1, int operador2, float *pResultado);
+float restaEnteros(int operador1, int operador2, float *pResultado);
+float multiplicacionEnteros(int operador1, int operador2, float *pResultado);
+float divisionEnteros(int operador1, int operador2, float *pResultado);
 
 int main(void) {
 	setbuf(stdout,NULL);
-	float numero1;
-	float numero2;
-	float respuestaScan;
+	int numero1;
+	int numero2;
+	int respuestaScan;
 	float resultado;
 
-	printf("Ingrese numero 1:");
+	printf("Ingrese numero 1:\n");
 		fflush(stdin);
-		respuestaScan=scanf("%f",&numero1);
+		respuestaScan=scanf("%d",&numero1);
 		while(respuestaScan==0)
 		{
-			printf("Reingrese numero 1:");
+			printf("Reingrese numero 1:\n");
 			fflush(stdin);
-			respuestaScan=scanf("%f",&numero1);
+			respuestaScan=scanf("%d",&numero1);
 		}
-		printf("Ingrese numero 2:");
+		printf("Ingrese numero 2:\n");
 		fflush(stdin);
-		respuestaScan=scanf("%f",&numero2);
+		respuestaScan=scanf("%d",&numero2);
 		while(respuestaScan==0)
 		{
-			printf("Reingrese numero 2:");
+			printf("Reingrese numero 2:\n");
 			fflush(stdin);
-			respuestaScan=scanf("%f",&numero2);
+			respuestaScan=scanf("%d",&numero2);
 		}
 
 		sumaEnteros(numero1,numero2,&resultado);
@@ -67,31 +67,31 @@ int main(void) {
 		return EXIT_SUCCESS;
 }
 
-float sumaEnteros(float operador1, float operador2, float *pResultado)
+float sumaEnteros(int operador1, int operador2, float *pResultado)
 {
 
-	*pResultado= operador1+operador2;
+	*pResultado= (float)operador1+operador2;
 	return 0;
 }
 
-float restaEnteros(float operador1, float operador2, float *pResultado)
+float restaEnteros(int operador1, int operador2, float *pResultado)
 {
 
-	*pResultado= operador1-operador2;
+	*pResultado= (float)operador1-operador2;
 	return 0;
 }
-float multiplicacionEnteros(float operador1, float operador2, float *pResultado)
+float multiplicacionEnteros(int operador1, int operador2, float *pResultado)
 {
 
-	*pResultado= operador1*operador2;
+	*pResultado= (float)operador1*operador2;
 	return 0;
 }
-float divisionEnteros(float operador1, float operador2, float *pResultado)
+float divisionEnteros(int operador1, int operador2, float *pResultado)
 {
 	int retorno;
 	if(operador2!= 0)
 	{
-		*pResultado = operador1 / operador2;
+		*pResultado = (float)operador1 / operador2;
 		retorno = 0;
 	}
 	else

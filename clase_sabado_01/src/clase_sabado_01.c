@@ -28,6 +28,9 @@ int main(void) {
 	char talle;
 	int respuestaScan;
 	int codigoMasCantidad;
+	int codigoTalleS;
+	int codigoTalleM;
+	int codigoTalleL;
 	int talleMasCantidad;
 	int acumuladorTalleS=0;
 	int contadorTalleM=0;
@@ -35,7 +38,7 @@ int main(void) {
 	int acumuladorTalleL=0;
 	float promedioTalleM;
 
-	for(int i=0;i<5;i=i+1)
+	for(int i=0;i<3;i=i+1)
 	{
 		printf("Ingrese codigo:");
 		fflush(stdin);
@@ -71,32 +74,35 @@ int main(void) {
 		{
 		   	 case's':
 		   		 acumuladorTalleS=acumuladorTalleS+cantidad;
+		   		 codigoTalleS=codigo;
 		   	 break;
 		   	 case'm':
 		   		 acumuladorTalleM=acumuladorTalleM+cantidad;
 		   		 contadorTalleM=contadorTalleM+1;
+		   		 codigoTalleM=codigo;
 		     break;
 		   	 case'l':
 		   		 acumuladorTalleL=acumuladorTalleL+cantidad;
+		   		 codigoTalleL=codigo;
 		   	 break;
 		}
 	}
 
 	if(acumuladorTalleS>acumuladorTalleM && acumuladorTalleS>acumuladorTalleL)
 	{
-		codigoMasCantidad=codigo;
+		codigoMasCantidad=codigoTalleS;
 		talleMasCantidad='s';
 	}
 	else
 	{
 		if(acumuladorTalleL>acumuladorTalleS)
 		{
-			codigoMasCantidad=codigo;
+			codigoMasCantidad=codigoTalleM;
 			talleMasCantidad='l';
 		}
 		else
 		{
-			codigoMasCantidad=codigo;
+			codigoMasCantidad=codigoTalleL;
 			talleMasCantidad='m';
 		}
 	}

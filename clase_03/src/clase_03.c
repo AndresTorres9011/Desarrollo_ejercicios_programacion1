@@ -50,30 +50,30 @@ int main(void) {
 			respuestaScan=scanf("%f",&numero2);
 		}
 		*/
-	if(getFloat("\nIngrese numero 1: ","\nError, Reingrese un numero: ",2,&numero1) == 0)
-	{
-		 if(getFloat("\nIngrese numero 2: ","\nError, Reingrese un numero: ",2,&numero2) == 0)
-		 {
+	if(getFloat("Ingrese numero 1: ","\nError, Reingrese un numero: ",2,&numero1) == 0)
+		{
+			 if(getFloat("Ingrese numero 2: ","\nError, Reingrese un numero: ",2,&numero2) == 0)
+			 {
 
-				sumaEnteros(numero1,numero2,&resultado);
-				printf("\nEl resultado de la suma es:%.2f", resultado);
-				restaEnteros(numero1,numero2,&resultado);
-				printf("\nEl resultado de la resta es:%.2f", resultado);
-				multiplicacionEnteros(numero1,numero2,&resultado);
-				printf("\nEl resultado de la multiplicacion es:%.2f", resultado);
-				if(divisionEnteros(numero1,numero2,&resultado)==0)
-				{
-					printf("\nEl resultado de la division es: %.2f", resultado);
-				}
-				else
-				{
-					printf("\nNo se puede dividir por 0");
-				}
-		  }
-	 }
+					sumaEnteros(numero1,numero2,&resultado);
+					printf("\nEl resultado de la suma es: %.2f", resultado);
+					restaEnteros(numero1,numero2,&resultado);
+					printf("\nEl resultado de la resta es: %.2f", resultado);
+					multiplicacionEnteros(numero1,numero2,&resultado);
+					printf("\nEl resultado de la multiplicacion es: %.2f", resultado);
+					if(divisionEnteros(numero1,numero2,&resultado)==0)
+					{
+						printf("\nEl resultado de la division es: %.2f", resultado);
+					}
+					else
+					{
+						printf("\nNo se puede dividir por 0");
+					}
+			  }
+		 }
 
-		return EXIT_SUCCESS;
-}
+			return EXIT_SUCCESS;
+	}
 
 float sumaEnteros(float operador1, float operador2, float *pResultado)
 {
@@ -106,6 +106,7 @@ float divisionEnteros(float operador1, float operador2, float *pResultado)
 	return retorno;
 
 }
+
 int getFloat(char *mensaje,char *mensajeError,int reintentos,float *pResultado)
 {
 	int retorno = -1;
@@ -125,6 +126,11 @@ int getFloat(char *mensaje,char *mensajeError,int reintentos,float *pResultado)
 	{ //TODO OK
 		*pResultado = bufferFloat;
 		retorno = 0;
+	}
+
+	if(reintentos==0)
+	{
+		printf("Se quedo sin intentos");
 	}
 	return retorno;
 }

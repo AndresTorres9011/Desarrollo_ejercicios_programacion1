@@ -17,12 +17,12 @@ int main(void) {
 	int edad;
 	char letra;
 
-	if(utn_getNumero(&edad,"Ingrese edad:","Error Reingrese edad (1-120)",1,120,3)==0)
+	if(utn_getNumero("Ingrese edad:","Error Reingrese edad (1-120)",&edad,3,1,120)==0)
 	{
 		printf("Ingresaste:%d",edad);
 	}
 
-	if(utn_getCaracter(&letra,"Ingrese letra:","Error Reingrese letra (A-J)",'A','J',3)==0)
+	if(utn_getCaracter("Ingrese letra:","Error Reingrese letra (A-J)",&letra,3,'A','J')==0)
 		{
 			printf("Ingresaste:%c",letra);
 		}

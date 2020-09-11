@@ -35,13 +35,14 @@ que contenga las funciones para realizar las cinco operaciones.
 #include <stdio.h>
 #include <stdlib.h>
 
-
+void utn_printMenuCalculadora(void);
 int utn_getFloat(char *mensaje,char *mensajeError,float *pResultado,int reintentos);
 float utn_sumaFloat(float operador1, float operador2, float* pResultado);
 float utn_restaFloat(float operador1, float operador2, float *pResultado);
 float utn_multiplicacionFloat(float operador1, float operador2, float *pResultado);
 float utn_divisionFloat(float operador1, float operador2, float *pResultado);
 int utn_getInt(char* mensaje, char* mensajeError,int* pResultado, int reintentos, int minimo, int maximo);
+float utn_getFactorial(float operador,float *pResultado);
 
 int main(void) {
 	setbuf(stdout,NULL);
@@ -52,13 +53,7 @@ int main(void) {
 
 	while(opcion!=6)
 	{
-		printf( "\n   >>> MENU CALCULADORA <<<" );
-		printf( "\n\n   1. Sumar dos números.");
-		printf( "\n   2. Restar dos números.");
-		printf( "\n   3. Multiplicar dos números.");
-		printf( "\n   4. Dividir dos números.");
-		printf( "\n   5. Factorial.");
-		printf( "\n   6. Salir.\n");
+		utn_printMenuCalculadora();
 
 		if(utn_getInt("\nIngrese opcion: ","\nError, Reingrese opcion valida (1-6): ",&opcion,2,1,7)==0)
 		{
@@ -111,6 +106,14 @@ int main(void) {
 							}
 							break;
 							case 5:
+							if(utn_getFactorial(numero1,&resultado)==0)
+							{
+								printf("\nEl factorial de %.2f es %.2f",numero1,resultado);
+							}
+							if(utn_getFactorial(numero2,&resultado)==0)
+							{
+								printf("\nEl factorial de %.2f es %.2f",numero2,resultado);
+							}
 							break;
 
 						}
@@ -162,7 +165,7 @@ int utn_getFloat(char *mensaje,char *mensajeError,float *pResultado,int reintent
 }
 
 /**
- * \brief utn_sumaFloat : Suma dos numeros.
+ * \brief utn_sumaFloat : Suma dos numeros decimales.
  * \param operador1: Variable que recibe primer operador.
  * \param operador2: Variable que recibe segundo operador.
  * \param pResultado: Direccion de memoria de la variable donde escribe la suma de los dos operadores.
@@ -182,7 +185,7 @@ float utn_sumaFloat(float operador1, float operador2, float* pResultado)
 }
 
 /**
- * \brief utn_restaFloat : Resta dos numeros..
+ * \brief utn_restaFloat : Resta dos numeros decimales.
  * \param operador1: Variable que recibe primer operador.
  * \param operador2: Variable que recibe segundo operador.
  * \param pResultado: Direccion de memoria de la variable donde escribe la resta de los dos operadores.
@@ -201,7 +204,7 @@ float utn_restaFloat(float operador1, float operador2, float *pResultado)
 }
 
 /**
- * \brief utn_multiplicacionFloat : Multiplica dos numeros.
+ * \brief utn_multiplicacionFloat : Multiplica dos numeros decimales.
  * \param operador1: Variable que recibe primer operador.
  * \param operador2: Variable que recibe segundo operador.
  * \param pResultado: Direccion de memoria de la variable donde escribe la multiplicacion de los dos operadores.
@@ -220,7 +223,7 @@ float utn_multiplicacionFloat(float operador1, float operador2, float *pResultad
 }
 
 /**
- * \brief utn_divisionFloat : Divide dos numeros.
+ * \brief utn_divisionFloat : Divide dos numeros decimales.
  * \param operador1: Variable que recibe primer operador.
  * \param operador2: Variable que recibe segundo operador.
  * \param pResultado: Direccion de memoria de la variable donde escribe la multiplicacion de los dos operadores.
@@ -238,7 +241,7 @@ float utn_divisionFloat(float operador1, float operador2, float *pResultado)
 	return retorno;
 }
 /**
- * \brief utn_getNumero : Pide al usuario un numero
+ * \brief utn_getNumero : Pide al usuario un numero entero.
  * \param mensaje: El mensaje que imprime para pedir un valor
  * \param mensajeError: mensaje que imprime si el rango no es valido
  * \param pResultado: Direccion de memoria de la variable donde escribe el valor ingresado por el usuario
@@ -280,4 +283,53 @@ int utn_getInt(char* mensaje, char* mensajeError,int* pResultado, int reintentos
 
 
 	return retorno;
+}
+/*
+ * \brief utn_getFactorial : devuelve el factorial de un numero float.
+ * \param operador: variable a calcularle su factorial.
+ * \param * resultado: Direccion de memoria de la variable donde escribe el valor del factorial.
+ * \return retorno: 0: si esta OK. -1: Si hubo un error o se intento calcular el factorial de un numero negativo
+ */
+
+float utn_getFactorial(float operador,float *pResultado)
+{
+	int retorno = -1;
+	int i;
+	int factorial = 1;
+
+	if(pResultado != NULL )
+	{
+		if(operador == 0)
+		{
+			*pResultado = 1;
+			retorno = 0;
+		}
+		if(operador > 0)
+		{
+			for (i = 1;i <= operador;i++)
+			{
+				factorial = (float)factorial * i;
+			}
+			*pResultado = factorial;
+			retorno = 0;
+		}
+	}
+	return retorno;
+}
+
+/*
+ * \brief utn_printMenuCalculadora : Imprime en pantalla el menu de una calculadora.
+  * \return retorno: 0: si esta OK. -1: Si hubo un error o se intento calcular el factorial de un numero negativo
+ */
+
+void utn_printMenuCalculadora(void)
+{
+	printf( "\n   >>> MENU CALCULADORA <<<" );
+	printf( "\n\n   1. Sumar dos números.");
+	printf( "\n   2. Restar dos números.");
+	printf( "\n   3. Multiplicar dos números.");
+	printf( "\n   4. Dividir dos números.");
+	printf( "\n   5. Factorial.");
+	printf( "\n   6. Salir.\n");
+
 }

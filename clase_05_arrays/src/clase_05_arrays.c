@@ -33,7 +33,7 @@ int main(void) {
 
 	for(int i=0; i < CANTIDAD_ELEMENTOS ; i++)
 	{
-		sprintf(aMensaje,"Numero %d: ",i+1);
+		sprintf(aMensaje,"\nNumero %d: ",i+1);
 		//if(getInt("Ingrese numero","Fuera de rango [0-1000]\n",&variableInt,3,0,1000)!=0)
 		if(getInt(aMensaje,"Fuera de rango [0-1000]\n",&variableInt,3,0,1000) != 0)
 		{
@@ -44,8 +44,10 @@ int main(void) {
 		else
 		{
 			arrayInt[i] = variableInt;
+
 		}
 	}
+
 	if(flagCargaCorrecta == 0)
 	{
 		for(int i=0; i < CANTIDAD_ELEMENTOS ; i++)
@@ -60,6 +62,7 @@ int main(void) {
 			}
 			acumulador= acumulador + arrayInt[i];
 		}
+
 		promedio=(float)acumulador/CANTIDAD_ELEMENTOS;
 		printf("El numero maximo ingresado es: %d\nEl numero minimo ingresado es: %d\nEl promedio es: %.2f",numeroMaximo,numeroMinimo,promedio);
 	}

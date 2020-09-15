@@ -53,15 +53,16 @@ int main(void) {
 
 	while(opcion!=6)
 	{
-		utn_printMenuCalculadora();
 
-		if(utn_getInt("\nIngrese opcion: ","\nError, Reingrese opcion valida (1-6): ",&opcion,2,1,7)==0)
-		{
-		  if(opcion>0 && opcion<6)
-		  {
-			  if(utn_getFloat("Ingrese numero 1: ","\nError, Reingrese un numero: ",&numero1,2) == 0)
+		    utn_printMenuCalculadora();
+
+	     while(!(utn_getInt("\nIngrese opcion: ","\nError, Reingrese opcion valida (1-6): ",&opcion,2,1,7)==0))
+		 {
+		  //if(opcion>0 && opcion<6)
+		  //{
+			  while(utn_getFloat("Ingrese numero 1: ","\nError, Reingrese un numero: ",&numero1,2))
 				{
-					if(utn_getFloat("Ingrese numero 2: ","\nError, Reingrese un numero: ",&numero2,2) == 0)
+					while(utn_getFloat("Ingrese numero 2: ","\nError, Reingrese un numero: ",&numero2,2))
 					{
 						switch(opcion)
 						{
@@ -119,7 +120,7 @@ int main(void) {
 						}
 					}
 				}
-		   }
+		   //}
 	  }
 	}
 
@@ -160,6 +161,7 @@ int utn_getFloat(char *mensaje,char *mensajeError,float *pResultado,int reintent
 	if(reintentos==0)
 	{
 		printf("Se quedo sin intentos");
+		retorno=-1;
 	}
 	return retorno;
 }
@@ -278,6 +280,7 @@ int utn_getInt(char* mensaje, char* mensajeError,int* pResultado, int reintentos
 		if(reintentos==0)
 			{
 				printf("Se quedo sin intentos");
+				retorno=-1;
 			}
 	}
 
@@ -333,3 +336,5 @@ void utn_printMenuCalculadora(void)
 	printf( "\n   6. Salir.\n");
 
 }
+
+

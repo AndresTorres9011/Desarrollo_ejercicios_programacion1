@@ -15,10 +15,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
+#include "utn.h"
 
 #define CANTIDAD_ELEMENTOS 4
-
-int getInt(char* mensaje, char* mensajeError, int* pResultado,int reintentos,int minimo,int maximo);
 
 int main(void) {
 	setbuf(stdout,NULL);
@@ -28,10 +27,13 @@ int main(void) {
 	int flagCargaCorrecta = 0;
 	int numeroMaximo;
 	int numeroMinimo;
-	int acumulador=0;
+	//int swap;
+	//int flagEstadoDesordenado=1;
+	int i;
+	//int acumulador=0;
 	float promedio;
 
-	for(int i=0; i < CANTIDAD_ELEMENTOS ; i++)
+	for( i=0; i < CANTIDAD_ELEMENTOS ; i++)
 	{
 		sprintf(aMensaje,"\nNumero %d: ",i+1);
 		//if(getInt("Ingrese numero","Fuera de rango [0-1000]\n",&variableInt,3,0,1000)!=0)
@@ -48,7 +50,7 @@ int main(void) {
 		}
 	}
 
-	if(flagCargaCorrecta == 0)
+	/*if(flagCargaCorrecta == 0)
 	{
 		for(int i=0; i < CANTIDAD_ELEMENTOS ; i++)
 		{
@@ -62,10 +64,76 @@ int main(void) {
 			}
 			acumulador= acumulador + arrayInt[i];
 		}
-
 		promedio=(float)acumulador/CANTIDAD_ELEMENTOS;
 		printf("El numero maximo ingresado es: %d\nEl numero minimo ingresado es: %d\nEl promedio es: %.2f",numeroMaximo,numeroMinimo,promedio);
+	}*/
+
+	if(flagCargaCorrecta==0)
+	{
+		if(utn_calcularMaximoArray(arrayInt,CANTIDAD_ELEMENTOS,&numeroMaximo)==0)
+		{
+			printf("\nEl numero maximo es: %d",numeroMaximo);
+		}
+		else
+		{
+			printf("Error");
+		}
+		if(utn_calcularMinimoArray(arrayInt,CANTIDAD_ELEMENTOS,&numeroMinimo)==0)
+		{
+			printf("\nEl numero minimo es: %d",numeroMinimo);
+		}
+		else
+		{
+			printf("Error");
+		}
+		if(utn_calculoPromedioArray(arrayInt,CANTIDAD_ELEMENTOS,&promedio)==0)
+		{
+			printf("\nEl promedio es: %.2f",promedio);
+		}
+
+		 printf("\nArray Desordenado: ");
+		for(i = 0; i < CANTIDAD_ELEMENTOS; i++)
+		{
+			printf("%d ",arrayInt[i]);
+		}
+
+		printf("\nArray Ordenado:");
+		if(utn_ordenarArrayEnteros(arrayInt,CANTIDAD_ELEMENTOS)==0)
+		{
+			for(i = 0; i < CANTIDAD_ELEMENTOS; i++)
+			{
+				printf("%d ",arrayInt[i]);
+			}
+		}
 	}
+
+
+
+		/*while(flagEstadoDesordenado==1)// no esta ordenado
+		{
+			flagEstadoDesordenado=0;
+
+			// la pasadita
+			for( i=0 ; i<(CANTIDAD_ELEMENTOS-1)  ; i++)
+			{
+				if(arrayInt[i] > arrayInt[i+1])
+				{
+					// intercambiar (swap)
+					swap = arrayInt[i];
+					arrayInt[i] = arrayInt[i+1];
+					arrayInt[i+1] = swap;
+					flagEstadoDesordenado=1;
+				}
+			}
+		}*/
+
+		/*if(utn_ordenarArrayEnteros(arrayInt,CANTIDAD_ELEMENTOS)==0)
+		{
+			for(i = 0; i < CANTIDAD_ELEMENTOS; i++)
+			{
+				printf("%d ",arrayInt[i]);
+			}
+		*/
 	return EXIT_SUCCESS;
 }
 
@@ -114,5 +182,4 @@ int getInt(char* mensaje, char* mensajeError, int* pResultado,int reintentos,int
 	}
 	return retorno;
 }
-
 

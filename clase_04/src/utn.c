@@ -17,7 +17,7 @@
  * \param maximo: valor maximo valido (no inclusive)
  * \return Retorno: 0: si esta todo OK. -1: Si hubo un error
  */
-int utn_getInt(char* mensaje, char* mensajeError,int* pResultado, int reintentos, int minimo, int maximo)
+int utn_getNumero(char* mensaje, char* mensajeError,int* pResultado, int reintentos, int minimo, int maximo)
 {
 	int retorno = -1;
 	int numero;

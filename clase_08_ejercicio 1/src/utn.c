@@ -6,6 +6,10 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include "utn.h"
+
+static int myGets(char *cadena, int len);
 
 /**
  * \brief utn_getFloat : Pide al usuario un numero.
@@ -370,5 +374,198 @@ int utn_ordenarArrayEnteros(int pArray[], int len)
     }
 	return retorno;
 }
+/**
+ * \brief utn_imprimirArrayNumeros: Imprime el array numerico recibido como parametro.
+ * \param int pArray[]: Array a ser procesado.
+ * \param int len: Cantidad de elementos a ser procesados.
+ * \return Retorno: 0: si esta todo OK. -1: Si hubo un error
+ */
+int utn_imprimirArrayNumeros(int pArray[], int len)
+{
+	int retorno=-1;
 
+	if(pArray!=NULL && len>0)
+	{
+		for(int i = 0; i < len; i++)
+		{
+			printf("%d ",pArray[i]);
+		}
+		retorno=0;
+	}
+	return retorno;
+}
+/**
+ * \brief utn_contadorArrayNumeroRepetido: Cuenta un numero repetido en el array recibido como parametro.
+ * \param int pArray[]: Array a ser procesado.
+ * \param int len: Cantidad de elementos a ser procesados.
+ * \param int numero: Numero recibido para ser comparado dentro del array.
+ * \param int *pResultado: Puntero al espacio de memoria donde se dejara el valor obtenido.
+ * \return Retorno: 0: si esta todo OK. -1: Si hubo un error
+ */
+int utn_contadorArrayNumeroRepetido(int pArray[], int len, int numero, int *pResultado)
+{
+	int retorno=-1;
+	int contadorNumeroRepetido=0;
 
+	if(pArray!=NULL && len>0 && pResultado!=NULL)
+	{
+		for(int i = 0; i < len; i++)
+		{
+			if(pArray[i]==numero)
+			{
+				contadorNumeroRepetido++;
+				//*pResultado=contadorNumeroRepetido;
+			}
+		}
+		*pResultado=contadorNumeroRepetido;
+		retorno=0;
+	}
+
+	return retorno;
+}
+/**
+ * \brief utn_contadorArrayLetraRepetido: Cuenta una letra repetida en el array recibido como parametro.
+ * \param int pArray[]: Array a ser procesado.
+ * \param int len: Cantidad de elementos a ser procesados.
+ * \param int numero: Letra recibida para ser comparada dentro del array.
+ * \param int *pResultado: Puntero al espacio de memoria donde se dejara el valor obtenido.
+ * \return Retorno: 0: si esta todo OK. -1: Si hubo un error
+ */
+int utn_contadorArrayLetraRepetido(char pArray[], int len,char letra, int *pResultado)
+{
+	int retorno=-1;
+	int contadorLetraRepetida=0;
+
+	if(pArray!=NULL && len>0 && pResultado!=NULL)
+	{
+		for(int i = 0; i < len; i++)
+		{
+			if(pArray[i]==letra)
+			{
+				contadorLetraRepetida++;
+				//*pResultado=contadorNumeroRepetido;
+			}
+		}
+		*pResultado=contadorLetraRepetida;
+		retorno=0;
+	}
+	return retorno;
+}
+/**
+ * \brief utn_imprimirArrayLetras: Imprime el array de letras recibido como parametro.
+ * \param int pArray[]: Array a ser procesado.
+ * \return Retorno: 0: si esta todo OK. -1: Si hubo un error
+ */
+int utn_imprimirArrayLetras(char pArray[])
+{
+	int retorno=-1;
+	int i=0;
+
+	if(pArray!=NULL)
+	{
+		while(pArray[i] != '\0')
+		{
+			printf("%c ",pArray[i]);
+			i++;
+		}
+		retorno=0;
+	}
+	return retorno;
+}
+/**
+ * \brief utn_validarArrayLetras: Verifica una cadena recibida como parametro para determinar si son letras validas.
+ * \param char* cadena: Cadena a analizar
+ * \param int limite: Indica la cantidad de letras maxima de la cadena.
+ * \return (-1) Indicar que no es un nombre valido / (0) Indica que que es un nombre valido
+ */
+int utn_validarArrayLetras(char* cadena,int limite)
+{
+	int retorno = 0;
+
+	for(int i=0; i<=limite && cadena[i] != '\0';i++)
+	{
+		//esta mal <----- A - Z -----> Esta mal
+		if(	(cadena[i] < 'A' || cadena[i] > 'Z') && (cadena[i] < 'a' || cadena[i] > 'z'))
+		{
+			retorno = -1;
+			break;
+		}
+	}
+	return retorno;
+}
+/**
+ * \brief 	Verifica una cadena recibida como parametro para determinir
+ * 			si es un nombre valido
+ * \param char* cadena, Cadena a analizar
+ * \param int limite, indica la cantidad de letras maxima de la cadena
+ * \return (0) Indicar que no es un nombre valido / (1) Indica que que es un nombre valido
+ *
+ */
+int utn_esUnNombreValido(char* cadena,int limite)
+{
+	int respuesta = 1; // TODO OK
+
+	for(int i=0; i<=limite && cadena[i] != '\0';i++)
+	{
+		//esta mal <----- A - Z -----> Esta mal
+		if(	(cadena[i] < 'A' || cadena[i] > 'Z') &&
+			(cadena[i] < 'a' || cadena[i] > 'z') )
+		{
+			respuesta = 0;
+			break;
+		}
+	}
+	return respuesta;
+}
+/**
+ * \brief Solicita un nombre al usuario
+ * \param char* mensaje, Es el mensaje a ser mostrado al usuario
+ * \param char* mensaje, Es el mensaje de error a ser mostrado al usuario
+ * \param int* pResultado, puntero al espacio de memoria donde se dejara el valor obtenido
+ * \param int reintentos, cantidad de oportunidades para ingresar el dato
+ * \param int limite, indica la cantidad de letras maxima del nombre
+ * \return (-1) Error / (0) Ok
+ *
+ */
+int utn_getNombre(char* mensaje, char* mensajeError, char* pResultado,int reintentos, int limite)
+{
+	char bufferString[LIMITE_BUFFER_STRING];
+	int retorno = -1;
+
+	if(		mensaje != NULL &&
+			mensajeError != NULL &&
+			pResultado != NULL &&
+			reintentos >= 0 &&
+			limite > 0)
+	{
+		do
+		{
+			printf("%s",mensaje);
+			if( myGets(bufferString,LIMITE_BUFFER_STRING) == 0 &&
+				strnlen(bufferString,sizeof(bufferString)-1)<= limite &&
+				utn_esUnNombreValido(bufferString,limite) != 0 )
+			{
+				retorno = 0;
+				//NO EXISTE pResultado = bufferString;
+				strncpy(pResultado,bufferString,limite);
+				break;
+			}
+			else
+			{
+				printf("%s",mensajeError);
+				reintentos--;
+			}
+		}while(reintentos >= 0);
+
+	}
+	return retorno;
+
+}
+
+static int myGets(char *cadena, int len)
+{
+	fflush(stdin);
+	fgets (cadena, len, stdin);
+	cadena[strlen (cadena) - 1] = '\0';
+	return 0;
+}

@@ -8,6 +8,8 @@
 #ifndef UTN_H_
 #define UTN_H_
 
+#define LIMITE_BUFFER_STRING 4096
+
 int utn_getFloat(char *mensaje,char *mensajeError,float *pResultado,int reintentos);
 float utn_sumaFloat(float operador1, float operador2, float* pResultado);
 float utn_restaFloat(float operador1, float operador2, float *pResultado);
@@ -17,10 +19,18 @@ int utn_getNumero(char* mensaje, char* mensajeError,int* pResultado, int reinten
 char utn_getCaracter(char* mensaje, char* mensajeError,char* pResultado, int reintentos, char minimo, char maximo);
 float utn_factorial(float operador,float *pResultado);
 void utn_printMenuCalculadora(void);
-int getInt(char* mensaje, char* mensajeError, int* pResultado,int reintentos,int minimo,int maximo);
+int utn_getInt(char* mensaje, char* mensajeError, int* pResultado,int reintentos,int maximo,int minimo);
 int utn_calcularMaximoArray(int pArray[], int len,int *pResultado);
 int utn_calcularMinimoArray(int pArray[], int len,int *pResultado);
 int utn_calculoPromedioArray(int pArray[], int len, float *pResultado);
 int utn_ordenarArrayEnteros(int pArray[], int len);
+int utn_imprimirArrayNumeros(int pArray[], int len);
+int utn_contadorArrayNumeroRepetido(int pArray[], int len,int numero, int *pResultado);
+int utn_contadorArrayLetraRepetido(char pArray[], int len,char letra, int *pResultado);
+int utn_imprimirArrayLetras(char pArray[]);
+int utn_validarArrayLetras(char* cadena,int limite);
+int utn_esUnNombreValido(char* cadena,int limite);
+int utn_getNombre(char* mensaje, char* mensajeError, char* pResultado,int reintentos, int limite);
+
 
 #endif /* UTN_H_ */

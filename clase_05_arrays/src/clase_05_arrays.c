@@ -19,6 +19,8 @@
 
 #define CANTIDAD_ELEMENTOS 4
 
+int getInt(char* mensaje, char* mensajeError, int* pResultado,int reintentos,int minimo,int maximo);
+
 int main(void) {
 	setbuf(stdout,NULL);
 	int variableInt;

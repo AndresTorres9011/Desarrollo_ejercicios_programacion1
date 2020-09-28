@@ -26,8 +26,8 @@ int alumno_alta(Alumno arrayAlumnos[],int limite,int indice)
 		indice < limite &&
 		arrayAlumnos[indice].isEmpty == TRUE)
 	{
-		if(	utn_getNumero("\n  Legajo?","\nError",&bufferAlumno.legajo,2,MIN_LEGAJO,MAX_LEGAJO) == 0 &&
-			utn_getNombre("\n  Nombre?","\nError",bufferAlumno.nombre,2,LONG_NOMBRE) == 0)
+		if(	utn_getNumero("\n  Legajo?","\n  Error no es un numero valido",&bufferAlumno.legajo,3,MIN_LEGAJO,MAX_LEGAJO) == 0 &&
+			utn_getNombre("\n  Nombre?","\n  Error no es un nombre valido",bufferAlumno.nombre,3,LONG_NOMBRE) == 0)
 		{
 			//bufferAlumno.isEmpty = FALSE;
 			arrayAlumnos[indice] = bufferAlumno;
@@ -37,10 +37,8 @@ int alumno_alta(Alumno arrayAlumnos[],int limite,int indice)
 	}
 	return retorno;
 }
-
-
 /**
- * \brief Modifica los datos de un alumno solo si el indice corresponde a un NO Empty
+ * \brief alumno_modificar: Modifica los datos de un alumno solo si el indice corresponde a un NO Empty
  * \param Alumno arrayAlumnos[], Es el puntero al array de alumnos
  * \param int limite, es el limite de array
  * \param int indice, es el indice donde se cargara el alumno
@@ -52,15 +50,11 @@ int alumno_modificar(Alumno arrayAlumnos[],int limite,int indice)
 	int retorno = -1;
 	return retorno;
 }
-
-
-
 /**
- * \brief Imprime los alumnos cargados
+ * \brief alumno_imprimir: Imprime los alumnos cargados
  * \param Alumno arrayAlumnos[], Es el puntero al array de alumnos
  * \param int limite, es el limite de array
  * \return (-1) Error / (0) Ok
- *
  */
 int alumno_imprimir(Alumno* pArrayAlumnos, int limite)
 {
@@ -78,13 +72,11 @@ int alumno_imprimir(Alumno* pArrayAlumnos, int limite)
 	}
 	return retorno;
 }
-
 /**
- * \brief Inicializa el array de alumnos
- * \param Alumno arrayAlumnos[], Es el puntero al array de alumnos
- * \param int limite, es el limite de array
+ * \brief alumno_initArray: Inicializa el array de alumnos.
+ * \param Alumno arrayAlumnos[]: Es el puntero al array de alumnos.
+ * \param int limite: Es el limite de array.
  * \return (-1) Error / (0) Ok
- *
  */
 int alumno_initArray(Alumno* pArrayAlumnos, int limite)
 {

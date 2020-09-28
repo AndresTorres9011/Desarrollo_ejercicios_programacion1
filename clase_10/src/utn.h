@@ -31,6 +31,7 @@ int utn_imprimirArrayLetras(char pArray[]);
 int utn_validarArrayLetras(char* cadena,int limite);
 int utn_getNombre(char* mensaje, char* mensajeError, char* pResultado,int reintentos, int limite);
 int utn_getNumeroString(char* mensaje, char* mensajeError,int* pResultado, int reintentos, int minimo, int maximo);
+int utn_getNumeroFloat(char* mensaje, char* mensajeError,float* pResultado, int reintentos, int minimo, int maximo);
 int utn_getNickName(char* mensaje, char* mensajeError, char* pResultado,int reintentos, int limite);
 
 

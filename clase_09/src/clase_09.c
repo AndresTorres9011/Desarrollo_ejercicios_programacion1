@@ -32,7 +32,7 @@ int main(void) {
 				switch(opcion)
 				{
 					case 1:
-						if(utn_getNumero("\n  Ingrese Indice?","\nError",&indice,2,0,QTY_ALUMNOS-1) == 0)
+						if(utn_getNumeroString("\n  Ingrese Indice?","\n  Error no es numero valido",&indice,2,0,QTY_ALUMNOS-1)==0)
 						// alumno_buscarLibre(arrayAlumnos,QTY_ALUMNOS)
 						{
 							alumno_alta(arrayAlumnos,QTY_ALUMNOS,indice);
@@ -54,7 +54,5 @@ int main(void) {
 			}
 		}while(opcion!=6);
 	}
-
-
 	return EXIT_SUCCESS;
 }

@@ -14,6 +14,8 @@ static int esUnNombreValido(char* cadena,int limite);
 static int getInt(int* pResultado, int limite);
 static int esNumerica(char *cadena, int limite);
 static int esAlfaNumerico(char* cadena,int limite);
+static int getFloat(float* pResultado, int limite);
+static int esFlotante(char *cadena, int limite);
 
 /**
  * \brief utn_getFloat : Pide al usuario un numero.
@@ -610,7 +612,7 @@ int utn_validarArrayLetras(char* cadena,int limite)
  * \return (0) Indica en caso de EXITO que se obtiene una cadena/ (-1) Indica que no se obtuvo una cadena.
  *
  */
- static int myGets(char *cadena, int len)
+ /*static int myGets(char *cadena, int len)
  {
 	int retorno=-1;
 	if(cadena!=NULL && len>0)
@@ -621,6 +623,37 @@ int utn_validarArrayLetras(char* cadena,int limite)
 		retorno=0;
 	}
  	return retorno;
+ }*/
+ /**
+  * \brief myGets: Lee de stdin hasta que encuentra un'\n' o hasta que haya copiado en
+  *                cadena un maximo de 'longitud -1' caracteres.
+  * \param char* cadena: Cadena a analizar.
+  * \param int len: Indica el tamaño de la cadena.
+  * \return (0) Indica en caso de EXITO que se obtiene una cadena/ (-1) Indica que no se obtuvo una cadena.
+  *
+  */
+ static int myGets(char* cadena, int len)
+ {
+ 	int retorno = -1; //ERROR
+ 	char bufferString[LIMITE_BUFFER_STRING];
+
+ 	if(cadena != NULL && len > 0)
+ 	{
+ 		fflush(stdin);
+ 		if(fgets(bufferString,sizeof(bufferString),stdin) != NULL)
+ 		{
+ 			if(bufferString[strnlen(bufferString,sizeof(bufferString))-1] == '\n')
+ 			{
+ 				bufferString[strnlen(bufferString,sizeof(bufferString))-1] = '\0';
+ 			}
+ 			if(strlen(bufferString) <= len)
+ 			{
+ 				strncpy(cadena,bufferString,len);
+ 				retorno = 0; //EXITO
+ 			}
+ 		}
+ 	}
+ 	return retorno;
  }
 /**
  * \brief esNumerica: Verifica si la cadena recibida como parametro es numerica.
@@ -630,7 +663,7 @@ int utn_validarArrayLetras(char* cadena,int limite)
  */
 static int esNumerica(char *cadena, int limite)
 {
-	int retorno=1;
+	int retorno=1;//VERDADERO
 	int i=0;
 
 	if(cadena[0]=='-')
@@ -643,7 +676,7 @@ static int esNumerica(char *cadena, int limite)
 		{
 			if(cadena[i]>'9' || cadena[i]<'0')
 			{
-				retorno=0;
+				retorno=0;//FALSO
 				break;
 			}
 		}
@@ -651,7 +684,7 @@ static int esNumerica(char *cadena, int limite)
 	return retorno;
 }
 /**
- * \brief esNumerica: Verifica si la cadena recibida como parametro es numerica.
+ * \brief getInt: Valida la cadena recibida como parametro, convierte el texto a numero y lo devuelve como int.
  * \param * pResultado: Puntero al espacio de memoria donde se dejara el resultado de la funcion.
  * param int limite: Indica la cantidad de caracteres maximos de la cadena.
  * \return (0) Indica en caso de EXITO que se obtiene un numero entero / (-1) Indica que no se obtuvo un numero.
@@ -673,13 +706,118 @@ static int getInt(int* pResultado, int limite)
 	return retorno;
 }
 /**
+ * \brief getFloat: Valida la cadena recibida como parametro, convierte el texto a numero y lo devuelve como float.
+ * \param * pResultado: Puntero al espacio de memoria donde se dejara el resultado de la funcion.
+ * param int limite: Indica la cantidad de caracteres maximos de la cadena.
+ * \return (0) Indica en caso de EXITO que se obtiene un numero entero / (-1) Indica que no se obtuvo un numero.
+ *
+ */
+static int getFloat(float* pResultado, int limite)
+{
+	int retorno=-1;
+	char bufferString[LIMITE_BUFFER_STRING];
+
+	if(pResultado!=NULL && limite>0)
+	{
+		if(myGets(bufferString,LIMITE_BUFFER_STRING) == 0 && esFlotante(bufferString,LIMITE_BUFFER_STRING))
+		{
+			*pResultado= atof(bufferString);
+			retorno=0;
+		}
+	}
+	return retorno;
+}
+/**
+ * \brief esFlotante: Verifica si la cadena recibida como parametro es flotante.
+ * \param char* cadena: Cadena de caracteres a analizar.
+ * \param int limite: Indica la cantidad de caracteres maximos de la cadena.
+ * \return (0) Indica que la cadena no es flotante / (1) Indica que la cadena es flotante.
+ */
+static int esFlotante(char *cadena, int limite)
+{
+	int retorno=1;//VERDADERO
+	int i=0;
+	int contadorDePuntos = 0;
+
+	if(cadena[0]=='-')
+	{
+		i=1;
+	}
+	if(cadena!=NULL && strlen(cadena)>0 && limite >0)
+	{
+		for(;i<=limite && cadena[i]!='\0';i++)
+		{
+			if((cadena[i]>'9' || cadena[i]<'0') && cadena[i] != '.')
+			{
+				retorno=0;//FALSO
+				break;
+			}
+			if(cadena[i] == '.')
+			{
+				contadorDePuntos++;
+				if(contadorDePuntos > 1)
+				{
+					retorno = 0;
+					break;
+				}
+			}
+		}
+	}
+	return retorno;
+}
+/**
+ * \brief utn_getNumeroFloat : Pide al usuario un numero float
+ * \param mensaje: El mensaje que imprime para pedir un valor
+ * \param mensajeError: mensaje que imprime si el rango no es valido
+ * \param pResultado: Direccion de memoria de la variable donde escribe el valor ingresado por el usuario
+ * \param reintentos: Cantidad de veces que se le volverá a pedir al usuario que ingrese un dato en caso de error.
+ * \param minimo: valor minimo valido (inclusive)
+ * \param maximo: valor maximo valido ( inclusive)
+ * \return Retorno: 0: si esta todo OK. -1: Si hubo un error
+ */
+int utn_getNumeroFloat(char* mensaje, char* mensajeError,float* pResultado, int reintentos, int minimo, int maximo)
+{
+	int retorno = -1;
+	float bufferFloat;
+	//int respuestaScanF;
+
+	if(pResultado!=NULL && mensaje!=NULL && mensajeError!=NULL && minimo<=maximo && reintentos>0)
+	{
+		while(reintentos>0)
+		{
+			printf("  %s",mensaje);
+			//fflush(stdin);
+			//respuestaScanF=scanf("%d",&bufferInt);
+			if(getFloat(&bufferFloat,LIMITE_BUFFER_STRING) == 0 && bufferFloat>=minimo && bufferFloat<=maximo)
+			{
+				*pResultado = bufferFloat;
+				retorno=0;
+				break;
+			}
+			else
+			{
+				printf("  %s\n",mensajeError);
+				reintentos--;
+			}
+		}
+		if(reintentos==0)
+			{
+				printf("\n   Se quedo sin intentos\n");
+				retorno=-1;
+				system("\n  PAUSE");
+			}
+	}
+	return retorno;
+}
+
+/**
  * \brief utn_getNumeroString : Pide al usuario un numero
  * \param mensaje: El mensaje que imprime para pedir un valor
  * \param mensajeError: mensaje que imprime si el rango no es valido
  * \param pResultado: Direccion de memoria de la variable donde escribe el valor ingresado por el usuario
  * \param reintentos: Cantidad de veces que se le volverá a pedir al usuario que ingrese un dato en caso de error.
  * \param minimo: valor minimo valido (inclusive)
- * \param maximo: valor maximo valido ( no inclusive)
+ * \param maximo: valor maximo valido ( inclusive)
  * \return Retorno: 0: si esta todo OK. -1: Si hubo un error
  */
 int utn_getNumeroString(char* mensaje, char* mensajeError,int* pResultado, int reintentos, int minimo, int maximo)

@@ -205,7 +205,7 @@ int alumno_modificar(Alumno arrayAlumnos[],int limite,int indice)
 	{
 		if(	utn_getNumeroString("\n Ingrese Legajo?","\nError Reingrese Legajo",&bufferAlumno.legajo,CANTIDAD_REINTENTOS,MIN_LEGAJO,MAX_LEGAJO) == 0
 			&&
-		utn_getNombre("\n Ingrese Nombre?","\nError Reingrese Nombre",bufferAlumno.nombre,CANTIDAD_REINTENTOS,LONG_NOMBRE) == 0)
+		  utn_getNombre("\n Ingrese Nombre?","\nError Reingrese Nombre",bufferAlumno.nombre,CANTIDAD_REINTENTOS,LONG_NOMBRE) == 0)
 		{
 			//bufferAlumno.isEmpty = FALSE;
 			bufferAlumno.id= arrayAlumnos[indice].id; //generarIdNuevo(); // NOOOOOOOOO

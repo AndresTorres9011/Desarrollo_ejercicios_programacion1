@@ -52,7 +52,7 @@ int main(void) {
 		do
 		{
 			if(utn_getNumeroString("\n\n  1-Alta Pantalla\n  2-Modificar Pantalla\n  3-Baja Pantalla "
-				                   "\n  4-Alta Contratacion\n  5-Modificar contratacion\n  6-Baja Contratacion\n  "
+				                   "\n  4-Alta Publicacion\n  5-Pausar Publicacion\n  6-Reanudar Publicacion\n  "
 				             "7-Consultar Facturacion\n  8-Listar Contrataciones\n  9-Listar Pantallas\n  10-Informar  \n  11-Salir  \n  Ingrese opción:   ",
 							 "ERROR Reingrese opcion valida",&opcion,CANTIDAD_REINTENTOS,1,10)==0)
 			{

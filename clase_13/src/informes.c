@@ -156,7 +156,7 @@ int informes_imprimirContratacionesConImportePorCliente (Contratacion * list, in
 				indiceClienteDeudaMax=j;
 			}
 		}
-		printf("\n\n  El cliente con la deuda mas alta es cuit  %s - Debe %.2f\n",listaCuit[indiceClienteDeudaMax],deudaMaxima);
+		printf("\n\n  El cliente con la deuda mas alta es el cuit  %s - Debe %.2f\n",listaCuit[indiceClienteDeudaMax],deudaMaxima);
 	}
 	return retorno;
 }

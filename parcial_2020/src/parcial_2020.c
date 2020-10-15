@@ -49,7 +49,7 @@ int main(void)
 		publicacion_altaForzada(arrayPublicacion,QTY_PUBLICACIONES,2,"venta de casa",2);
 		publicacion_altaForzada(arrayPublicacion,QTY_PUBLICACIONES,5,"venta de bote",3);
 		publicacion_altaForzada(arrayPublicacion,QTY_PUBLICACIONES,3,"venta de ropa",4);
-		publicacion_altaForzada(arrayPublicacion,QTY_PUBLICACIONES,2,"venta de lote",5);
+		publicacion_altaForzada(arrayPublicacion,QTY_PUBLICACIONES,4,"venta de lote",5);
 		publicacion_altaForzada(arrayPublicacion,QTY_PUBLICACIONES,4,"venta de auto",6);
 		publicacion_altaForzada(arrayPublicacion,QTY_PUBLICACIONES,5,"venta de ropa",6);
 		publicacion_altaForzada(arrayPublicacion,QTY_PUBLICACIONES,7,"venta de moto",3);

@@ -443,6 +443,32 @@ int publicacion_counterActivePublicationClient(Publicacion *list, int len, int i
 	return retorno;
 }
 /**
+ * \brief _counterPausedPublicationClient: Function to count how many paused ads has a client searched by ID
+ * \param Publicacion *list: Pointer to the array.
+ * \param int len: Length of the array
+ * \param int id: receive the ID to be search
+ * \param int *pCounter: Pointer to the memory  where write the value.
+ * \return (-1) if something went wrong, (0) if everything is OK
+ */
+int publicacion_counterPausedPublicationClient(Publicacion *list, int len, int id, int *pCounter)
+{
+	int retorno=-1;
+	int counter=0;
+	if(list!=NULL && len>0 && id>0 && pCounter!=NULL)
+	{
+		for(int i=0;i<len;i++)
+		{
+			if(list[i].idCliente == id && list[i].isActive == FALSE && list[i].isEmpty==FALSE )
+			{
+				counter++;
+			}
+		}
+		*pCounter = counter;
+		retorno = 0;
+	}
+	return retorno;
+}
+/**
  * \brief _counterPaused: Function to count how many paused ads have the array.
  * \param Publicacion *list: Pointer to  array.
  * \param int len: Length of the array

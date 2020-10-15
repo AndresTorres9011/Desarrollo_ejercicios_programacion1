@@ -16,5 +16,7 @@ int info_removeClientById(Cliente* list,int len,Publicacion* listDos,int lenDos)
 int info_printActive(Cliente *listUno, int lenUno, Publicacion *listDos, int lenDos);
 int info_report(Cliente *listUno, int lenUno, Publicacion *listDos, int lenDos);
 int informe_imprimirClienteMayorCantidadAvisos(Publicacion* listUno,int lenUno,Cliente* listDos,int lenDos);
+int informe_imprimirClienteMayorCantidadAvisosActivos(Publicacion* listUno,int lenUno,Cliente* listDos,int lenDos);
+int informe_imprimirClienteMayorCantidadAvisosPausados(Publicacion* listUno,int lenUno,Cliente* listDos,int lenDos);
 
 #endif /* INFORMES_H_ */

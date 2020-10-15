@@ -42,6 +42,7 @@ int publicacion_findByClientId(Publicacion *list, int len, int id);
 int publicacion_rubroMax(Publicacion *list, int len);
 int publicacion_equalRubro(Publicacion *list, int len, int rubro, int *pCounter);
 int publicacion_altaForzada(Publicacion* list, int len,int idCliente,char* texto,int rubro);
+int publicacion_counterPausedPublicationClient(Publicacion *list, int len, int id, int *pCounter);
 
 #endif /* PUBLICACIONES_H_ */
 

@@ -161,40 +161,60 @@ int info_report(Cliente *listUno, int lenUno, Publicacion *listDos, int lenDos)
 	{
 		do
 		{
-			if(utn_getNumeroString("\n\n  1-Cliente con mas avisos\n  2-Cantidad de avisos pausados\n  3-Rubro con mas avisos\n  4-Salir \n  Opcion:", "\n  ERROR! Reingrese opcion valida", &option,CANTIDAD_REINTENTOS, 1, 4)==0)
+			if(utn_getNumeroString("\n\n  1-Cliente con mas avisos\n  2-Cantidad de avisos pausados\n  3-Rubro con mas avisos\n  4-Cliente con mas avisos activos\n  5-Cliente con mas avisos pausados\n  6-Salir \n  Opcion:", "\n  ERROR! Reingrese opcion valida", &option,CANTIDAD_REINTENTOS,1,6)==0)
 			{
 				switch(option)
 				{
-				case 1:
-					if(informe_imprimirClienteMayorCantidadAvisos(listDos,lenDos,listUno,lenUno)==0)
-					{
-						retornar=0;
-					}
-				break;
-				case 2:
-					if(publicacion_counterPaused(listDos,lenDos,&adsCounter)==0)
-					{
-						printf("\n  Cantidad de avisos pausados: %d\n",adsCounter);
-						retornar=0;
-					}
-					else
-					{
-						printf("\n  No hay avisos pausados\n");
-					}
-				break;
-				case 3:
-					if(publicacion_rubroMax(listDos,lenDos)==0)
-					{
-						retornar=0;
-					}
-					else
-					{
-						printf("\n  No hay rubros cargados\n");
-					}
-				break;
+					case 1:
+						if(informe_imprimirClienteMayorCantidadAvisos(listDos,lenDos,listUno,lenUno)==0)
+						{
+							retornar=0;
+						}
+					break;
+					case 2:
+						if(publicacion_counterPaused(listDos,lenDos,&adsCounter)==0)
+						{
+							printf("\n  Cantidad de avisos pausados: %d\n",adsCounter);
+							retornar=0;
+						}
+						else
+						{
+							printf("\n  NO HAY AVISOS PAUSADOS\n");
+						}
+					break;
+					case 3:
+						if(publicacion_rubroMax(listDos,lenDos)==0)
+						{
+							retornar=0;
+						}
+						else
+						{
+							printf("\n  NO HAY AVISOS CARGADOS\n");
+						}
+					break;
+				    case 4:
+				    	if(informe_imprimirClienteMayorCantidadAvisosActivos(listDos,lenDos,listUno,lenUno)==0)
+				    	{
+				    		retornar=0;
+				    	}
+				    	else
+				    	{
+				    		printf("\n  NO HAY AVISOS ACTIVOS\n");
+				    	}
+					break;
+				    case 5:
+				    	if(informe_imprimirClienteMayorCantidadAvisosPausados(listDos,lenDos,listUno,lenUno)==0)
+				    	{
+				    		retornar=0;
+						}
+						else
+						{
+							printf("\n  NO HAY AVISOS PAUSADOS\n");
+						}
+					break;
 				}
 			}
-		}while(option != 4);
+		}while(option != 6);
 	}
 	return retornar;
 }
@@ -232,6 +252,80 @@ int informe_imprimirClienteMayorCantidadAvisos(Publicacion* listUno,int lenUno,C
 		cliente_findById(listDos,lenDos,&auxIndiceMaxAvisos,idMaximoAvisos);
 		cliente_printById(listDos,lenDos,auxIndiceMaxAvisos);
 		printf("\n    Es el cliente con mas avisos activos, la cantidad de avisos publicados es: %d\n",maximoAvisos);
+	}
+	return retorno;
+}
+/**
+ * \brief _imprimirClienteMayorCantidadAvisosActivos: Function to find the client with more active ads.
+ * \param Publicacion* listUno: Pointer to  array.
+ * \param int lenUno: Length of the array.
+ * \param Cliente *listDos: Pointer to array.
+ * \param int lenDos: Length of the array.
+ * \return (-1) if something went wrong, (0) if everything is OK
+ */
+int informe_imprimirClienteMayorCantidadAvisosActivos(Publicacion* listUno,int lenUno,Cliente* listDos,int lenDos)
+{
+	int retorno=-1;
+	int indiceCliente;
+	int cantidadAvisos;
+	int maximoAvisos;
+	int idMaximoAvisos;
+	int auxIndiceMaxAvisos;
+
+	if(listUno!=NULL && lenUno>0 && listDos!=NULL && lenDos>0)
+	{
+		for(indiceCliente=0;indiceCliente<lenDos;indiceCliente++)
+		{
+			if(publicacion_counterActivePublicationClient(listUno,lenUno,listDos[indiceCliente].idCliente,&cantidadAvisos)==0)
+			{
+				if(indiceCliente==0 || maximoAvisos<cantidadAvisos)
+				{
+					maximoAvisos=cantidadAvisos;
+					idMaximoAvisos=listDos[indiceCliente].idCliente;
+					retorno=0;
+				}
+			}
+		}
+		cliente_findById(listDos,lenDos,&auxIndiceMaxAvisos,idMaximoAvisos);
+		cliente_printById(listDos,lenDos,auxIndiceMaxAvisos);
+		printf("\n    Es el cliente con mas avisos activos, la cantidad de avisos publicados es: %d\n",maximoAvisos);
+	}
+	return retorno;
+}
+/**
+ * \brief _imprimirClienteMayorCantidadAvisosPausados: Function to find the client with more paused ads.
+ * \param Publicacion* listUno: Pointer to  array.
+ * \param int lenUno: Length of the array.
+ * \param Cliente *listDos: Pointer to array.
+ * \param int lenDos: Length of the array.
+ * \return (-1) if something went wrong, (0) if everything is OK
+ */
+int informe_imprimirClienteMayorCantidadAvisosPausados(Publicacion* listUno,int lenUno,Cliente* listDos,int lenDos)
+{
+	int retorno=-1;
+	int indiceCliente;
+	int cantidadAvisos;
+	int maximoAvisos;
+	int idMaximoAvisos;
+	int auxIndiceMaxAvisos;
+
+	if(listUno!=NULL && lenUno>0 && listDos!=NULL && lenDos>0)
+	{
+		for(indiceCliente=0;indiceCliente<lenDos;indiceCliente++)
+		{
+			if(publicacion_counterPausedPublicationClient(listUno,lenUno,listDos[indiceCliente].idCliente,&cantidadAvisos)==0 && cantidadAvisos>0)
+			{
+				if(indiceCliente==0 || maximoAvisos<cantidadAvisos)
+				{
+					maximoAvisos=cantidadAvisos;
+					idMaximoAvisos=listDos[indiceCliente].idCliente;
+					retorno=0;
+				}
+			}
+		}
+		cliente_findById(listDos,lenDos,&auxIndiceMaxAvisos,idMaximoAvisos);
+		cliente_printById(listDos,lenDos,auxIndiceMaxAvisos);
+		printf("\n    Es el cliente con mas avisos pausados, la cantidad de avisos es: %d\n",maximoAvisos);
 	}
 	return retorno;
 }

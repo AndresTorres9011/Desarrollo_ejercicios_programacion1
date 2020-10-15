@@ -60,7 +60,7 @@ int main(void)
 		{
 			if(utn_getNumeroString("\n\n  1-Alta Cliente\n  2-Modificar Cliente\n  3-Baja Cliente "
 				                   "\n  4-Alta Publicacion\n  5-Pausar publicacion\n  6-Reanudar Publicacion\n  "
-				             "7-Imprimir Clientes\n  8-Informar\n  10-Salir  \n  Ingrese opción:   ",
+				             "7-Imprimir Clientes\n  8-Informar\n  9-Salir  \n  Ingrese opción:   ",
 							 "ERROR Reingrese opcion valida",&opcion,CANTIDAD_REINTENTOS,1,10)==0)
 			{
 				switch(opcion)
@@ -147,7 +147,7 @@ int main(void)
 					break;
 				}
 			}
-		}while(opcion!=10);
+		}while(opcion!=9);
 	}
 	return EXIT_SUCCESS;
 }

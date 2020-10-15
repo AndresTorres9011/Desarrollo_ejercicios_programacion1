@@ -111,7 +111,7 @@ int cliente_createNew(Cliente * list, int len)
 			}
 			else
 			{
-				printf("  CUIT EXISTENTE EN SISTEMA ID ASIGNADO");
+				printf("  CUIT EXISTENTE EN SISTEMA");
 			}
 	}
 	else

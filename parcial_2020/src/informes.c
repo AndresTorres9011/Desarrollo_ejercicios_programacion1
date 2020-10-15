@@ -161,7 +161,7 @@ int info_report(Cliente *listUno, int lenUno, Publicacion *listDos, int lenDos)
 	{
 		do
 		{
-			if(utn_getNumeroString("\n\n  1-Cliente con mas avisos\n  2-Cantidad de avisos pausados\n  3-Rubro con mas avisos\n  4-Salir \n  Opcion:", "\n  ERROR! Reingrese opcion valida", &option, 2, 1, 4)==0)
+			if(utn_getNumeroString("\n\n  1-Cliente con mas avisos\n  2-Cantidad de avisos pausados\n  3-Rubro con mas avisos\n  4-Salir \n  Opcion:", "\n  ERROR! Reingrese opcion valida", &option,CANTIDAD_REINTENTOS, 1, 4)==0)
 			{
 				switch(option)
 				{

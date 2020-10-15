@@ -11,10 +11,10 @@
 #include "cliente.h"
 #include "publicaciones.h"
 
-int info_printAdsByClientID(Cliente *clientList, int clientLen, Publicacion *adList, int adLen, int id);
-int info_printActive(Cliente *clientList, int clientLen, Publicacion *adList, int adLen);
-int info_report(Cliente *clientList, int clientLen, Publicacion *adList, int adLen);
-int info_clientMax(Cliente *clientList, int clientLen, Publicacion *adList, int adLen);
-int info_pausedAdsQty(Cliente *clientList, int clientLen, Publicacion *adList, int adLen);
+int info_printAdsByClientID(Cliente *listUno, int lenUno, Publicacion *listDos, int lenDos, int id);
+int info_removeClientById(Cliente* list,int len,Publicacion* listDos,int lenDos);
+int info_printActive(Cliente *listUno, int lenUno, Publicacion *listDos, int lenDos);
+int info_report(Cliente *listUno, int lenUno, Publicacion *listDos, int lenDos);
+int informe_imprimirClienteMayorCantidadAvisos(Publicacion* listUno,int lenUno,Cliente* listDos,int lenDos);
 
 #endif /* INFORMES_H_ */

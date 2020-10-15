@@ -4,13 +4,6 @@
  *  Created on: 13/10/2020
  *      Author: TORRES CAICEDO ANDRES FELIPE
  */
-/*
- * utn.c
- *
- *  Created on: 15/09/2020
- *      Author: TORRES CAICEDO ANDRES FELIPE
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -22,9 +15,6 @@
 #define CANTIDAD_REINTENTOS 3
 #define MIN_ID 0
 #define MAX_ID 9999
-#define QTY_CLIENTES 100
-#define QTY_PUBLICACIONES 10000
-
 
 static int newIdGenerate(void);
 
@@ -32,7 +22,7 @@ static int newIdGenerate(void);
  * \brief _init: To indicate that all position in the array are empty,
 *                this function put the flag (isEmpty) in TRUE in all
 *                position of the array.
-* \param (define struct)* list: Pointer to the array.
+* \param (Cliente)* list: Pointer to the array.
 * \param int len:  Array length
 * \return int Return (-1) if Error [Invalid length or NULL pointer] - (0) if Ok
 *
@@ -52,14 +42,14 @@ int cliente_init(Cliente* list, int len)
 }
 /**
  * \brief _searchEmpty: Search in the array for the first index with TRUE in isEmpty.
- * \param (define struct)* list: Pointer to the array.
+ * \param (Cliente)* list: Pointer to the array.
  * \param int len: Array length.
  * \param int *pIndex: Pointer to position of first empty index.
  * \return (-1) Error / (0) Ok
  */
 int cliente_searchEmpty(Cliente* list, int len, int *pIndex)
 {
-	int retornar = -1;
+	int retorno = -1;
 	if(list != NULL && pIndex != NULL && len>0)
 	{
 		for(int i = 0; i < len; i++)
@@ -67,12 +57,12 @@ int cliente_searchEmpty(Cliente* list, int len, int *pIndex)
 			if(list[i].isEmpty == TRUE)
 			{
 				*pIndex = i;
-				retornar = 0;
+				retorno = 0;
 				break;
 			}
 		}
 	}
-	return retornar;
+	return retorno;
 }
 /* \brief newIdGenerate: Create a new id when the user load data (different id).
  *  \return id.
@@ -80,7 +70,6 @@ int cliente_searchEmpty(Cliente* list, int len, int *pIndex)
 static int newIdGenerate(void)
 {
 	static int idCliente=0; // es global para solo la fn puede usarla
-
 	//guarda el ultimo que asigne (ultimo que devolvi)
 	//para devolver 1+
 	idCliente = idCliente+1;
@@ -89,61 +78,124 @@ static int newIdGenerate(void)
 /**
  * \brief _createNew: Create a new profile asking data to the user.
  *                    Use _searchEmpty, to locate data in an empty index.
- * \param (define struct) * list: Pointer to the array.
+ * \param (Cliente) * list: Pointer to the array.
  * \param int len: Array length.
  * \return (-1) Error / (0) Ok
- *
  */
 int cliente_createNew(Cliente * list, int len)
 {
 	int retorno = -1;
 	int indice;
+	int auxIndice;
 	Cliente buffer;
 	if (list != NULL && len >0)
 	{
 		if (cliente_searchEmpty(list,len,&indice) == 0)
 		{
-			if (utn_getCuit("\n  Ingrese Cuit?","\n  Error no es un cuit valido",buffer.cuit,CANTIDAD_REINTENTOS,SIZE_CUIT) == 0 &&
-				utn_getNombre("\n  Ingrese Nombre?","\n  Error no es un nombre valido",buffer.nombre,CANTIDAD_REINTENTOS,SIZE_NAME) == 0 &&
-				utn_getNombre("\n  Ingrese Apellido?","\n  Error no es un apellido valido",buffer.apellido,CANTIDAD_REINTENTOS,SIZE_NAME) == 0)
-			{
-				buffer.idCliente= newIdGenerate();
-				list[indice] = buffer;
-				list[indice].isEmpty = FALSE;
-				retorno=0;
+			if(utn_getCuit("\n  Ingrese Cuit?","\n  Error no es un cuit valido",buffer.cuit,CANTIDAD_REINTENTOS,SIZE_CUIT) == 0 && buffer.isEmpty==FALSE &&
+					cliente_findByCuit(list,len,&auxIndice,buffer.cuit)==-1)
+		    {
+					if (//utn_getCuit("\n  Ingrese Cuit?","\n  Error no es un cuit valido",buffer.cuit,CANTIDAD_REINTENTOS,SIZE_CUIT) == 0 &&
+						utn_getNombre("\n  Ingrese Nombre?","\n  Error no es un nombre valido",buffer.nombre,CANTIDAD_REINTENTOS,SIZE_NAME) == 0 &&
+						utn_getNombre("\n  Ingrese Apellido?","\n  Error no es un apellido valido",buffer.apellido,CANTIDAD_REINTENTOS,SIZE_NAME) == 0)
+					{
+						buffer.idCliente= newIdGenerate();
+						list[indice].isEmpty = FALSE;
+						list[indice] = buffer;
+						retorno=0;
+					}
+					else
+					{
+						printf("  ERROR NO INGRESASTE DATOS VALIDOS");
+					}
 			}
 			else
 			{
-				printf("  ERROR NO INGRESASTE DATOS VALIDOS");
+				printf("  CUIT EXISTENTE EN SISTEMA ID ASIGNADO");
 			}
-		}
-		else
-		{
-			printf("\n  NO QUEDAN ESPACIOS LIBRES");
-		}
+	}
+	else
+	{
+		printf("\n  NO QUEDAN ESPACIOS LIBRES");
+	}
 	}
 	return retorno ;
 }
 /**
- * \brief _findById: find  by Id.
- * \param (define struct)* list: Pointer to the array.
+ * \brief _findByCuit: find position in the array by Cuit.
+ * \param (Cliente)* list: Pointer to the array.
  * \param int len: Array length.
  * \param int *pIndex: Pointer to the memory  where write the value.
- * \param int id: Assigned id.
+ * \param char* cuitCliente: Assigned cuit.
  * \return (-1) Error / (0) Ok
- *
  */
-int cliente_findById(Cliente* list, int len, int* pIndex, int id)
+int cliente_findByCuit(Cliente* list, int len, int* pIndex, char* cuitCliente)
 {
     int retorno = -1;
 
-    if (list != NULL && len > 0)
+    if (list != NULL && pIndex!= NULL && len > 0 && cuitCliente>0)
     {
         for (int i = 0; i < len; i++)
         {
             if(list[i].isEmpty == FALSE )
             {
-                if(list[i].idCliente == id)
+                if(strncmp(list[i].cuit,cuitCliente,SIZE_CUIT)==0)
+                {
+                   *pIndex = i;
+                   retorno = 0;
+                    break;
+                }
+            }
+        }
+    }
+    return retorno;
+}
+/**
+ * \brief _findIdByCuit: find idCliente position in the array  by cuit.
+ * \param (Cliente)* list: Pointer to the array.
+ * \param int len: Array length.
+ * \param char* cuit: Cuit typed by the user.
+ * \param int *pIdCliente: Pointer to the memory  where write the search value.
+ * \param int id: Assigned id.
+ * \return (-1) Error / (0) Ok
+ */
+int cliente_findIdByCuit(Cliente* list, int len,char* cuitCliente, int* pIdCliente)
+{
+	int retorno = -1;
+	int i;
+
+	if (list != NULL && pIdCliente!= NULL && len > 0 && cuitCliente>0)
+	{
+		for(i=0;i<len; i++)
+		{
+			if(list[i].isEmpty==FALSE &&  strncmp(list[i].cuit,cuitCliente,SIZE_CUIT)==0)
+			{
+				*pIdCliente = list[i].idCliente;
+				retorno = 0;
+			}
+		}
+	}
+	return retorno;
+}
+/**
+ * \brief _findById: find the position in the array searched by Id.
+ * \param (Cliente)* list: Pointer to the array.
+ * \param int len: Array length.
+ * \param int *pIndex: Pointer to the memory  where write the value.
+ * \param int id: Id received to search position.
+ * \return (-1) Error / (0) Ok
+ */
+int cliente_findById(Cliente* list, int len, int* pIndex, int idCliente)
+{
+    int retorno = -1;
+
+    if (list != NULL && len > 0 && pIndex != NULL && idCliente>0)
+    {
+        for (int i = 0; i < len; i++)
+        {
+            if(list[i].isEmpty == FALSE )
+            {
+                if(list[i].idCliente == idCliente)
                 {
                    *pIndex = i;
                    retorno = 0;
@@ -156,9 +208,9 @@ int cliente_findById(Cliente* list, int len, int* pIndex, int id)
 }
 /**
  * \brief _printById: Print data by ID.
- * \param (define struct)* list: Pointer to the array.
- * \param int len: Array length..
- * \param int index: Is the data position.
+ * \param (Cliente)* list: Pointer to the array.
+ * \param int len: Array length.
+ * \param int index: Is the data position in the array.
  * \return (-1) Error / (0) Ok
  */
 int cliente_printById(Cliente* list, int len, int index)
@@ -169,17 +221,16 @@ int cliente_printById(Cliente* list, int len, int index)
 		if(list[index].isEmpty == FALSE)
 		{
 			printf("\n  -IDC: %d -Cuit de cliente: %s -Nombre: %s -Apellido: %s",
-									list[index].idCliente,list[index].cuit,list[index].nombre, list[index].apellido);
+					list[index].idCliente,list[index].cuit,list[index].nombre, list[index].apellido);
 			retorno = 0;
 		}
     }
     return retorno;
 }
 /**
- * \brief _printAll: Print the uploaded data.
- * \param (define struct)* list: Pointer to the array.
+ * \brief _printAll: Print all the uploaded data.
+ * \param (Cliente)* list: Pointer to the array.
  * \param int len: Array length..
- * \param int index: Is the data position.
  * \return (-1) Error / (0) Ok
  */
 int cliente_printAll(Cliente* list, int len)
@@ -202,13 +253,11 @@ int cliente_printAll(Cliente* list, int len)
 }
 /**
  * \brief _modifify: Modify the data only if the index corresponds to a NO Empty
- * \param (define struct)* list: Pointer to the array.
+ * \param (Cliente)* list: Pointer to the array.
  * \param int len: Array length.
- * \param int index: Is the index where it is loaded.
  * \return (-1) Error / (0) Ok
- *
  */
-int cliente_modifify(Cliente list[],int len)
+int cliente_modifify(Cliente* list,int len)
 {
 	int retorno = -1;
 	int idModificar;
@@ -216,11 +265,11 @@ int cliente_modifify(Cliente list[],int len)
 	Cliente buffer;
 	if(list != NULL && len>0)
 	{
-		cliente_printAll(list,QTY_CLIENTES);
+		cliente_printAll(list,len);
 		if(utn_getNumeroString("\n\n  Ingrese el ID a modificar:","  Error Reingrese el ID a modificar!"
 									,&idModificar,CANTIDAD_REINTENTOS,1,1000)==0)
 		{
-		   if(cliente_findById(list,QTY_CLIENTES,&index,idModificar)==0)
+		   if(cliente_findById(list,len,&index,idModificar)==0)
 		   {
 				if(utn_getCuit("\n  Ingrese Cuit?","\n  Error no es un cuit valido",buffer.cuit,CANTIDAD_REINTENTOS,SIZE_CUIT) == 0 &&
 					utn_getNombre("\n  Ingrese Nombre?","\n  Error no es un nombre valido",buffer.nombre,CANTIDAD_REINTENTOS,SIZE_NAME) == 0 &&
@@ -243,11 +292,10 @@ int cliente_modifify(Cliente list[],int len)
 }
 /**
  * \brief _remove: Remove data by Id (put isEmpty Flag in 1)
- * \param  (define struct)* list: Pointer to the array.
+ * \param  (Cliente)* list: Pointer to the array.
  * \param int len: Length of the array
  * \param int index: is the position from which the data is deleted.
  * \return int Return (-1) if Error [Invalid length or NULL pointer o] - (0) if Ok
- *
  */
 int cliente_remove(Cliente* list,int len )
 {
@@ -257,11 +305,11 @@ int cliente_remove(Cliente* list,int len )
 
 	if(list != NULL && len>0)
 	{
-		cliente_printAll(list,QTY_CLIENTES);
+		cliente_printAll(list,len);
 		if(utn_getNumeroString("\n\n  Ingrese el ID a dar de baja:","  Error Reingrese el ID a dar de baja!"
 								 ,&idBaja,CANTIDAD_REINTENTOS,1,1000)==0)
 		{
-			if(cliente_findById(list,QTY_CLIENTES,&index,idBaja)==0)
+			if(cliente_findById(list,len,&index,idBaja)==0)
 			{
 				if(list[index].isEmpty == FALSE)
 				{
@@ -280,7 +328,7 @@ int cliente_remove(Cliente* list,int len )
 }
 /**
  * \brief _countId: Count the data you have registered.
- * \param (define struct)* list: Pointer to the array.
+ * \param (Cliente)* list: Pointer to the array.
  * \param int len: Array length.
  * \paramfloat* quantityId:Pointer to the memory space where the result of the function will be left.
  * \return (-1) Error / (0) Ok
@@ -306,12 +354,13 @@ int cliente_countId(Cliente* list,int len,int* quantityId)
 	return retorno;
 }
 /**
- * \brief_altaForzada: Create a new profile asking data to the user.
- *                    Use _searchEmpty, to locate data in an empty index.
- * \param (define struct) * list: Pointer to the array.
+ * \brief_altaForzada: Automatically creates a new profile .
+ * \param Cliente * list: Pointer to the array.
  * \param int len: Array length.
+ * \param char* cuit: Cuit assigned.
+ * \param char* nombre: Name of the client.
+ * \param char* apellido: Last name of the client..
  * \return (-1) Error / (0) Ok
- *
  */
 int cliente_altaForzada(Cliente * list, int len,char*cuit, char* nombre,char* apellido)
 {
@@ -333,5 +382,3 @@ int cliente_altaForzada(Cliente * list, int len,char*cuit, char* nombre,char* ap
 	}
 	return retorno ;
 }
-
-

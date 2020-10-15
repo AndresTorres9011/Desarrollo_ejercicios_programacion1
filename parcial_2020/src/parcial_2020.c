@@ -24,7 +24,8 @@
 #define TRUE 1
 #define FALSE 0
 
-int main(void) {
+int main(void)
+{
 	setbuf(stdout,NULL);
 	int opcion;
 
@@ -36,13 +37,13 @@ int main(void) {
 		cliente_altaForzada(arrayClientes,QTY_CLIENTES,"20-94728818-1","ANDRES","TORRES");
 		cliente_altaForzada(arrayClientes,QTY_CLIENTES,"20-78567890-2","FELIPE","CAICEDO");
 		cliente_altaForzada(arrayClientes,QTY_CLIENTES,"30-33567897-7","VIVIANA","HERRERA");
-		cliente_altaForzada(arrayClientes,QTY_CLIENTES,"20-94728818-1","GUSTAVO","ROJAS");
+		cliente_altaForzada(arrayClientes,QTY_CLIENTES,"20-94888818-1","GUSTAVO","ROJAS");
 		cliente_altaForzada(arrayClientes,QTY_CLIENTES,"30-21345654-6","JULIANA","PORTELA");
 		cliente_altaForzada(arrayClientes,QTY_CLIENTES,"20-94728818-1","CARLOS","FLORES");
 		cliente_altaForzada(arrayClientes,QTY_CLIENTES,"20-78567890-2","TOMAS","GIL");
-		cliente_altaForzada(arrayClientes,QTY_CLIENTES,"30-33567897-7","VIVIANA","HERRERA");
-		cliente_altaForzada(arrayClientes,QTY_CLIENTES,"20-94728818-1","GUSTAVO","ROJAS");
-		cliente_altaForzada(arrayClientes,QTY_CLIENTES,"30-21345654-6","JULIANA","PORTELA");
+		cliente_altaForzada(arrayClientes,QTY_CLIENTES,"30-23908765-7","CAMILA","VASQUEZ");
+		cliente_altaForzada(arrayClientes,QTY_CLIENTES,"20-96786518-1","HERNAN","PRIETO");
+		cliente_altaForzada(arrayClientes,QTY_CLIENTES,"30-21376454-6","DONOFRIO","VARGAS");
 
 		publicacion_altaForzada(arrayPublicacion,QTY_PUBLICACIONES,4,"venta de lote",5);
 		publicacion_altaForzada(arrayPublicacion,QTY_PUBLICACIONES,2,"venta de casa",2);
@@ -50,12 +51,16 @@ int main(void) {
 		publicacion_altaForzada(arrayPublicacion,QTY_PUBLICACIONES,3,"venta de ropa",4);
 		publicacion_altaForzada(arrayPublicacion,QTY_PUBLICACIONES,2,"venta de lote",5);
 		publicacion_altaForzada(arrayPublicacion,QTY_PUBLICACIONES,4,"venta de auto",6);
-		publicacion_altaForzada(arrayPublicacion,QTY_PUBLICACIONES,1,"venta de ropa",4);
+		publicacion_altaForzada(arrayPublicacion,QTY_PUBLICACIONES,5,"venta de ropa",6);
+		publicacion_altaForzada(arrayPublicacion,QTY_PUBLICACIONES,7,"venta de moto",3);
+		publicacion_altaForzada(arrayPublicacion,QTY_PUBLICACIONES,4,"venta de ropa",6);
+		publicacion_altaForzada(arrayPublicacion,QTY_PUBLICACIONES,2,"venta de zapatillas",2);
+
 		do
 		{
 			if(utn_getNumeroString("\n\n  1-Alta Cliente\n  2-Modificar Cliente\n  3-Baja Cliente "
 				                   "\n  4-Alta Publicacion\n  5-Pausar publicacion\n  6-Reanudar Publicacion\n  "
-				             "7-Imprimir Clientes\n  8-Informar\n  9-Salir  \n  Ingrese opción:   ",
+				             "7-Imprimir Clientes\n  8-Informar\n  10-Salir  \n  Ingrese opción:   ",
 							 "ERROR Reingrese opcion valida",&opcion,CANTIDAD_REINTENTOS,1,10)==0)
 			{
 				switch(opcion)
@@ -81,7 +86,7 @@ int main(void) {
 						}
 					break;
 					case 3://Baja Cliente
-					    if(cliente_remove(arrayClientes,QTY_CLIENTES)==0)
+					    if(info_removeClientById(arrayClientes,QTY_CLIENTES,arrayPublicacion,QTY_PUBLICACIONES)==0)
 					    {
 							 printf("\n  BAJA EXITOSA\n");
 						}
@@ -91,7 +96,7 @@ int main(void) {
 						}
 					break;
 					case 4://Alta Publicacion
-						if(publicacion_add(arrayPublicacion,QTY_PUBLICACIONES,arrayClientes,QTY_CLIENTES)==0)
+						if(publicacion_createNewProfile(arrayPublicacion,QTY_PUBLICACIONES,arrayClientes,QTY_CLIENTES)==0)
 						{
 							   printf("\n  ALTA EXITOSA\n");
 						}
@@ -123,11 +128,11 @@ int main(void) {
 					case 7://Imprimir clientes con todos sus datos
 						if(info_printActive(arrayClientes,QTY_CLIENTES,arrayPublicacion,QTY_PUBLICACIONES)==0)
 						{
-							printf("\nFin de la impresion\n");
+							printf("\n  FIN DE IMFORME\n");
 						}
 						else
 						{
-							printf("\nNo hay clientes cargados\n");
+							printf("\n NO HAY CLIENTES CARGADOS\n");
 						}
 					break;
 					case 8://Informar
@@ -142,7 +147,7 @@ int main(void) {
 					break;
 				}
 			}
-		}while(opcion!=9);
+		}while(opcion!=10);
 	}
 	return EXIT_SUCCESS;
 }

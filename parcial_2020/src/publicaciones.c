@@ -20,160 +20,293 @@
 #define MIN_RUBRO 1
 #define MAX_RUBRO 10
 #define MIN_ID 0
-#define MAX_ID 999
+#define MAX_ID 9999
 #define CANTIDAD_REINTENTOS 3
 
-static int idGenerate(void);
+static int newIdGenerate(void);
 
 /**
- * \brief Function to add an Publicacion asking for the client ID, sector number, and the ad text
- * \param Publicacion *list: Pointer to an Publicacion array
- * \param int len: Publicacion array length
- * \param Client *clientList: Pointer to an Client array
- * \param int clientLen: Client array length
- * \return (-1) if something went wrong, (0) if everything is OK.
- */
-int publicacion_add(Publicacion *list, int len, Cliente *clientList, int clientLen)
-{
-	int retornar = -1;
-	Publicacion buffer;
-	int index;
-	int clientIndex;
-	if(list != NULL && len > 0 && cliente_searchEmpty(clientList,clientLen, &index) == 0)
-	{
-		if(publicacion_searchEmpty(list, len, &index) == 0 && index >= 0 && cliente_printAll(clientList, clientLen) == 0 &&
-		   utn_getNumeroString("\n\nIngrese el ID del cliente: ", "\nERROR! Ingrese un ID valido: ",&buffer.idCliente, CANTIDAD_REINTENTOS,MIN_ID,MAX_ID)==0 &&
-		   cliente_findById(clientList, clientLen,&clientIndex,buffer.idCliente) == 0 &&
-		   utn_getNumeroString("\nIngrese el numero de rubro: ", "\nERROR! Ingrese un numero de rubro valido: ",&buffer.rubro, CANTIDAD_REINTENTOS, MIN_RUBRO, MAX_RUBRO)==0 &&
-		   utn_getAlfanumerico("\nIngrese el texto del aviso: ", "\nERROR! Ingrese caracteres validos: ",buffer.texto,CANTIDAD_REINTENTOS, SIZE_TEXT)==0)
-		{
-			buffer.id = idGenerate();
-			buffer.isEmpty = FALSE;
-			buffer.isActive = TRUE;
-			list[index] = buffer;
-			retornar = 0;
-			printf("\nID para el nuevo aviso: %d", list[index].id);
-		}
-	}
-	return retornar;
-}
-
-/**
- * \brief Function pause an publicacion searched by ID (put isActive field on FALSE)
- * \param Publicacion *list: Pointer to an Publicacion array
- * \param int len: Length of the array
- * \param Client *clientList: Pointer to an Client array
- * \param int clientLen: Client array length
- * \return (-1) if something went wrong, (0) if everything is OK.
- */
-
-int publicacion_pause(Publicacion *list, int len, Cliente *clientList, int clientLen)
-{
-	int retornar = -1;
-	int id;
-	int index;
-	int option;
-	if(list != NULL && len > 0 && clientList != NULL && clientLen>0 && publicacion_searchForNoEmpty(list, len) == 0 && publicacion_searchForActive(list, len) == 1)
-	{
-		publicacion_print(list, len);
-		if(utn_getNumeroString("\n\nIngrese el id de la publicacion a pausar: ", "\nError! Ingrese un ID valido: ", &id, CANTIDAD_REINTENTOS, MIN_ID,MAX_ID) == 0 && publicacion_findById(list, len, id, &index)==0 &&
-		   list[index].isActive == TRUE && publicacion_printClientById(list, len, clientList, clientLen, id) == 0 &&
-		   utn_getNumeroString("\n\nQuiere pausar esta publicidad? (1-SI O 2-NO): " , "\nERROR! Ingrese 1 o 2 ", &option, CANTIDAD_REINTENTOS, 1, 2)==0 && option == 1)
-		{
-			list[index].isActive = FALSE;
-			retornar = 0;
-		}
-	}
-	return retornar;
-}
-
-/**
- * \brief Function reanude an publicacion searched by ID (put isActive field on TRUE)
- * \param Publicacion *list: Pointer to an Publicacion array
- * \param int len: Length of the array
- * \param Client *clientList: Pointer to an Client array
- * \param int clientLen: Client array length
- * \return (-1) if something went wrong, (0) if everything is OK.
- */
-int publicacion_reanude(Publicacion *list, int len, Cliente *clientList, int clientLen)
-{
-	int retornar = -1;
-	int id;
-	int index;
-	int option;
-	if(list != NULL && len > 0 && clientList != NULL && clientLen>0 && publicacion_searchForNoEmpty(list, len) == 0 && publicacion_searchForActive(list, len) == 0)
-	{
-		publicacion_print(list, len);
-		if(utn_getInt("\nIngrese el id de la publicacion a reanudar: ", "\nError! Ingrese un ID valido: ", &id,CANTIDAD_REINTENTOS, MIN_ID,MAX_ID) == 0 && publicacion_findById(list, len, id, &index)==0 &&
-		   list[index].isActive == FALSE && publicacion_printClientById(list, len, clientList, clientLen, id) == 0 &&
-		   utn_getInt("\n\nQuiere reanudar esta publicidad? presione 1 para SI o 2 para NO: ", "\nERROR! Ingrese 1 o 2 ", &option,CANTIDAD_REINTENTOS, 1, 2)==0 && option == 1)
-		{
-			list[index].isActive = TRUE;
-			retornar = 0;
-		}
-	}
-	return retornar;
-}
-
-/**
- * \brief Function to remove an publicacion searched by ID
- * \param Publicacion *list: Pointer to an Publicacion array
- * \param int len: Length of the array
- * \param int id: receive the ID to be search
- * \return (-1) if something went wrong, (0) if everything is OK
+ * \brief _init: To indicate that all position in the array are empty,
+*                this function put the flag (isEmpty) in TRUE in all
+*                position of the array.
+* \param (Publicacion)* list: Pointer to the array.
+* \param int len:  Length of the array.
+* \return int Return (-1) if Error [Invalid length or NULL pointer] - (0) if Ok
 */
-int publicacion_remove(Publicacion *list, int len, int id)
+int publicacion_init(Publicacion* list, int len)
 {
-	int retornar = -1;
-	if(list!=NULL && len>0)
+	int retorno = -1;
+	if(list != NULL && len > 0)
 	{
 		for(int i=0;i<len;i++)
 		{
-			if(publicacion_findByClientId(list, len, id)>-1)
+			list[i].isEmpty = TRUE;
+			list[i].isActive=-1;
+		}
+		retorno = 0;
+	}
+	return retorno;
+}
+/**
+ * \brief _searchEmpty: Search in the array for the first index with TRUE in isEmpty.
+ * \param (Publicacion)* list: Pointer to the array.
+ * \param int len: Length of the array.
+ * \param int *pIndex: Pointer to position of first empty index.
+ * \return (-1) Error / (0) Ok
+ */
+int publicacion_searchEmpty(Publicacion* list, int len, int *pIndex)
+{
+	int retornar = -1;
+	if(list != NULL && pIndex != NULL && len>0)
+	{
+		for(int i = 0; i < len; i++)
+		{
+			if(list[i].isEmpty == TRUE)
 			{
-				list[i].isEmpty = TRUE;
+				*pIndex = i;
+				retornar = 0;
+				break;
 			}
 		}
-		retornar = 0;
 	}
 	return retornar;
 }
-
-/**
- * \brief Function to print a client info searched by an publicacion ID
- * \param Publicacion *list: Pointer to an Publicacion array
- * \param int len: Length of the array
- * \param Client *clientList: Pointer to an Client array
- * \param int clientLen: Client array length
- * \param int id: receive the ID to be search
- * \return (-1) if something went wrong, (0) if everything is OK
+/* \brief newIdGenerate: Create a new id when the user load data (different id).
+ *  \return id.
  */
-int publicacion_printClientById(Publicacion *list, int len, Cliente *clientList, int clientLen, int id)
+static int newIdGenerate(void)
 {
-	int retornar=-1;
-	int index;
-	if(list!=NULL && len>0 && clientList!=NULL && clientLen>0 && clientLen>0 && id>0 && cliente_findById(clientList, len,&index, id)==0)
-	{
-		printf("\nCliente: \nNombre: %s - Apellido: %s - Cuit: %s", clientList[index].nombre, clientList[index].apellido, clientList[index].cuit);
-		retornar = 0;
-	}
-	return retornar;
+	static int id=0; // es global para solo la fn puede usarla
+
+	//guarda el ultimo que asigne (ultimo que devolvi)
+	//para devolver 1+
+	id = id+1;
+	return id;
 }
-
-
 /**
- * \brief Function to print all the Publicacions in the array
- * \param Publicacion *list: Pointer to an Publicacion array
+ * \brief _findById: find position in the array  by Id.
+ * \param (Publicacion)* list: Pointer to the array.
+ * \param int len: Length of the array.
+ * \param int *pIndex: Pointer to the memory  where write the value.
+ * \param int id: Assigned id.
+ * \return (-1) Error / (0) Ok
+ */
+int publicacion_findById(Publicacion* list, int len, int* pIndex, int id)
+{
+    int retorno = -1;
+    //*pIndex = -1;
+    if (list != NULL && len > 0)
+    {
+        for (int i = 0; i < len; i++)
+        {
+            if(list[i].isEmpty == FALSE && (list[i].isActive==TRUE || list[i].isActive==FALSE))
+            {
+                if(list[i].id == id)
+                {
+                   *pIndex = i;
+                   retorno = 0;
+                    break;
+                }
+            }
+        }
+    }
+    return retorno;
+}
+/**
+ * \brief _createNewProfile: Create a new profile asking data to the user.
+ * \param (Publicacion) * listUno: Pointer to the array.
+ * \param int lenUno: Length of the array.
+ * \param (Cliente) * lisDos: Pointer to the array.
+ * \param int lenDos: Length of the array.
+ * \return (-1) Error / (0) Ok
+ */
+int publicacion_createNewProfile(Publicacion * listUno, int lenUno,Cliente* listDos,int lenDos)
+{
+	int retorno = -1;
+	int indice;
+	Publicacion buffer;
+	int clientIndex;
+	if (listUno != NULL && lenUno >0 && listDos !=NULL && lenDos>0)
+	{
+		if (publicacion_searchEmpty(listUno,lenUno,&indice) == 0 && indice>=0 && cliente_printAll(listDos,lenDos)==0)
+		{
+			if (utn_getNumeroString("\n  Id de cliente: ","\n  Error no es un numero valido",&buffer.idCliente,CANTIDAD_REINTENTOS,MIN_ID,MAX_ID)==0 &&
+			    cliente_findById(listDos,lenDos,&clientIndex,buffer.idCliente)==0 &&
+				utn_getNumeroString("\n  Ingrese el numero de rubro: ", "\nERROR! Ingrese un numero de rubro valido: ",&buffer.rubro, CANTIDAD_REINTENTOS, MIN_RUBRO, MAX_RUBRO)==0 &&
+			    utn_getAlfanumerico("\n  Ingrese el texto del aviso: ", "\nERROR! Ingrese caracteres validos: ",buffer.texto,CANTIDAD_REINTENTOS, SIZE_TEXT)==0)
+			{
+					buffer.id= newIdGenerate();
+					buffer.isActive = TRUE;
+					listUno[indice].isEmpty = FALSE;
+					listUno[indice] = buffer;
+					printf("\n  ID para el nuevo aviso: %d", listUno[indice].id);
+					retorno=0;
+			}
+			else
+			{
+					printf("\n  ID DE CLIENTE NO ENCONTRADO");
+			}
+		}
+		else
+		{
+			printf("\n  NO QUEDAN ESPACIOS LIBRES");
+		}
+	}
+	return retorno ;
+}
+/**
+ * \brief  _pause :Function pause a publication searched by ID (put isActive field on FALSE)
+ * \param Publicacion *list: Pointer to array.
+ * \param int len: Length of the array.
+ * \param Cliente *listDos: Pointer to array.
+ * \param int lenDos: Length of the array.
+ * \return (-1) if something went wrong, (0) if everything is OK.
+ */
+int publicacion_pause(Publicacion* list,int len,Cliente* listDos,int lenDos)
+{
+	int retorno = -1;
+	int idPausa;
+	int index;
+	int option;
+
+	if(list != NULL && len>0 && listDos != NULL && lenDos>0 && publicacion_printActive(list, len)==0)
+	{
+		if(!utn_getNumeroString("\n\n  Ingrese id de publicacion a pausar:","  Error Reingrese id publicacion a !",&idPausa, CANTIDAD_REINTENTOS, MIN_ID,MAX_ID) &&
+						!publicacion_findById(list,len,&index,idPausa) && list[index].isActive==TRUE && !publicacion_printClientById(list,len,listDos,lenDos,idPausa))
+		{
+			if(utn_getNumeroString("\n\n  Quiere pausar esta publicidad? (1-SI O 2-NO): " , "\nERROR ", &option, CANTIDAD_REINTENTOS, 1, 2)==0 && option == 1)
+		    {
+					if(list[index].isActive == TRUE)
+					{
+						//BAJA LOGICA DE ID
+						list[index].isActive = FALSE;
+						retorno = 0;
+					}
+			}
+			else
+			{
+				printf("\n  OPCION INCORRECTA \n");
+			}
+
+		}
+		else
+		{
+			printf("\n  ID NO ENCONTRADO VERIFIQUE \n");
+		}
+	}
+	else
+	{
+		printf("\n  NO EXISTE PUBLICACIONES ACTIVAS \n");
+	}
+	return retorno;
+}
+/**
+ * \brief  _pause :Function reanude a publication searched by ID (put isActive field on TRUE)
+ * \param Publicacion *list: Pointer to array.
+ * \param int len: Length of the array
+ * \param Cliente *listDos: Pointer to array.
+ * \param int lenDos: Length of the array.
+ * \return (-1) if something went wrong, (0) if everything is OK.
+ */
+int publicacion_reanude(Publicacion* list,int len,Cliente* listDos,int lenDos)
+{
+	int retorno = -1;
+	int idPausa;
+	int index;
+	int option;
+
+	if(list != NULL && len>0 && listDos != NULL && lenDos>0 && publicacion_printPause(list, len)==0)
+	{
+		if(!utn_getNumeroString("\n\n  Ingrese id de publicacion a reanudar:","  Error Reingrese id publicacion a !",&idPausa, CANTIDAD_REINTENTOS, MIN_ID,MAX_ID) &&
+		   !publicacion_findById(list,len,&index,idPausa)&& list[index].isActive==FALSE && !publicacion_printClientById(list,len,listDos,lenDos,idPausa))
+		{
+			if(utn_getNumeroString("\n\n  Quiere reanudar esta publicidad? (1-SI O 2-NO): ","\nERROR ", &option, CANTIDAD_REINTENTOS,1,2)==0 && option == 1 )
+		    {
+					if(list[index].isActive == FALSE)
+					{
+						list[index].isActive = TRUE;
+						retorno = 0;
+					}
+			}
+			else
+			{
+				printf("\n  OPCION INCORRECTA \n");
+			}
+		}
+		else
+		{
+			printf("\n  ID NO ENCONTRADO VERIFIQUE \n");
+		}
+	}
+	else
+	{
+		printf("\n  NO EXISTE PUBLICACIONES PAUSADAS \n");
+	}
+	return retorno;
+}
+/**
+ * \brief _printClientById: Function to print info searched by ID.
+ * \param Publicacion *list: Pointer to array.
+ * \param int len: Length of the array
+ * \param Cliente *listDos: Pointer to array.
+ * \param int lenDos: Length of the array.
+ * \param int id: receive the ID to be search.
+ * \return (-1) if something went wrong, (0) if everything is OK
+ */
+int publicacion_printClientById(Publicacion *list, int len, Cliente *listDos, int lenDos, int id)
+{
+	int retorno=-1;
+	int index;
+	int auxIdCliente;
+	if(list!=NULL && len>0 && listDos!=NULL && lenDos>0 && id>0 &&
+		publicacion_findByIdpcliente(list,len,listDos,lenDos,id,&auxIdCliente)==0 &&
+		cliente_findById(listDos, len,&index,auxIdCliente)==0)
+	{
+		printf("\n  Cliente:\n  -IDc: %d  -Nombre: %s - Apellido: %s - Cuit: %s"
+			   ,listDos[index].idCliente,listDos[index].nombre,listDos[index].apellido,listDos[index].cuit);
+		retorno = 0;
+	}
+	return retorno;
+}
+/**
+ * \brief _findByIdpcliente: find idCliente position in the array  by Id.
+ * \param (Publicacion)* list: Pointer to the array.
+ * \param int len: Length of the array.
+ * \param Cliente *listDos: Pointer to array.
+ * \param int lenDos: Length of the array.
+ * \param int id: Assigned id.
+ * \param int *pIdCliente: Pointer to the memory  where write the value.
+ * \return (-1) Error / (0) Ok
+ */
+int publicacion_findByIdpcliente(Publicacion* list, int len, Cliente *listDos, int lenDos, int id, int* pIdCliente)
+{
+	int retorno = -1;
+	int i;
+	if(list!=NULL && len>0 && listDos!=NULL && lenDos>0 && id>0 && pIdCliente !=NULL)
+	{
+		for(i=0;i<len; i++)
+		{
+			if(list[i].isEmpty==FALSE && list[i].id == id)
+			{
+				*pIdCliente = list[i].idCliente;
+				retorno = 0;
+			}
+		}
+	}
+	return retorno;
+}
+/**
+ * \brief _printAll :Function to print the array.
+ * \param Publicacion *list: Pointer to array.
  * \param int len: Length of the array
  * \return (-1) if something went wrong, (0) if everything is OK
  */
-int publicacion_print(Publicacion *list, int len)
+int publicacion_printAll(Publicacion *list, int len)
 {
 	int retorno = -1;
 	char strEstado[8];
 	if(list != NULL && len > 0)
 	{
-
 		for(int i=0;i<len;i++)
 		{
 			if(list[i].isEmpty == FALSE)
@@ -186,259 +319,233 @@ int publicacion_print(Publicacion *list, int len)
 				{
 					strncpy(strEstado,"PAUSADA",8);
 				}
-				printf("\nID: %d - Estado: %s - texto: %s",list[i].id,strEstado,list[i].texto);
+				printf("\n  ID: %d - Estado: %s - texto: %s",list[i].id,strEstado,list[i].texto);
 				retorno = 0;
 			}
 		}
 	}
 	return retorno;
 }
-
 /**
- * \brief Function to count how many ads has a client searched by ID
- * \param Publicacion *list: Pointer to an Publicacion array
+ * \brief _printActive: Function to print Active in the array.
+ * \param Publicacion *list: Pointer to array.
+ * \param int len: Length of the array.
+ * \return (-1) if something went wrong, (0) if everything is OK
+**/
+int publicacion_printActive(Publicacion *list, int len)
+{
+	int retorno = -1;
+	char strEstado[8];
+	if(list != NULL && len > 0)
+	{
+		for(int i=0;i<len;i++)
+		{
+			if(list[i].isEmpty == FALSE && list[i].isActive==TRUE )
+			{
+				if (list[i].isActive == TRUE)
+				{
+					strncpy(strEstado,"ACTIVA",8);
+				}
+				else
+				{
+					strncpy(strEstado,"PAUSADA",8);
+				}
+				printf("\n  ID: %d - Estado: %s -Texto: %s  -IDc: %d",list[i].id,strEstado,list[i].texto,list[i].idCliente);
+				retorno = 0;
+			}
+		}
+	}
+	return retorno;
+}
+/**
+ * \brief _printPause: Function to print Paused in the array.
+ * \param Publicacion *list: Pointer to array.
+ * \param int len: Length of the array.
+ * \return (-1) if something went wrong, (0) if everything is OK
+ **/
+int publicacion_printPause(Publicacion *list, int len)
+{
+	int retorno = -1;
+	char strEstado[8];
+	if(list != NULL && len > 0)
+	{
+		for(int i=0;i<len;i++)
+		{
+			if(list[i].isEmpty == FALSE && list[i].isActive==FALSE )
+			{
+				if (list[i].isActive == TRUE)
+				{
+					strncpy(strEstado,"ACTIVA",8);
+				}
+				else
+				{
+					strncpy(strEstado,"PAUSADA",8);
+				}
+				printf("\n  ID: %d - Estado: %s - texto: %s",list[i].id,strEstado,list[i].texto);
+				retorno = 0;
+			}
+		}
+	}
+	return retorno;
+}
+/**
+ * \brief _cantidadAvisos: Function to count how many ads has a client searched by ID
+ * \param Publicacion *list: Pointer to an array.
  * \param int len: Length of the array
  * \param int id: receive the ID to be search
- * \param int *pCounter: Pointer of the counter
+ * \param int *pResultado: Pointer to the memory  where write the value.
  * \return (-1) if something went wrong, (0) if everything is OK
  */
-int publicacion_counterClient(Publicacion *adList, int adLen, int id, int *pCounter)
+int publicacion_cantidadAvisos(Publicacion* list,int len,int id,int *pResultado)
 {
-	int retornar=-1;
-	int counter=0;
-	if(adList!=NULL && adLen>0)
+	int retorno=-1;
+	int indiceAviso;
+	int contadorAvisos=0;
+
+	if(list!=NULL && len>0 && id>0 && pResultado!=NULL)
 	{
-		for(int i=0;i<adLen;i++)
+		for(indiceAviso=0;indiceAviso<len;indiceAviso++)
 		{
-			if(adList[i].idCliente == id)
+			if(list[indiceAviso].isEmpty==FALSE && id==list[indiceAviso].idCliente && list[indiceAviso].isActive==TRUE)
 			{
-				counter++;
+				contadorAvisos++;
+				retorno=0;
 			}
 		}
-		*pCounter = counter;
-		retornar = 0;
 	}
-	return retornar;
+	*pResultado=contadorAvisos;
+	return retorno;
 }
-
 /**
- * \brief Function to count how many active ads has a client searched by ID
- * \param Publicacion *list: Pointer to an Publicacion array
+ * \brief _counterActivePublicationClient: Function to count how many active ads has a client searched by ID
+ * \param Publicacion *list: Pointer to the array.
  * \param int len: Length of the array
  * \param int id: receive the ID to be search
- * \param int *pCounter: Pointer of the counter
+ * \param int *pCounter: Pointer to the memory  where write the value.
  * \return (-1) if something went wrong, (0) if everything is OK
  */
-int publicacion_counterActiveClient(Publicacion *adList, int adLen, int id, int *pCounter)
+int publicacion_counterActivePublicationClient(Publicacion *list, int len, int id, int *pCounter)
 {
-	int retornar=-1;
+	int retorno=-1;
 	int counter=0;
-	if(adList!=NULL && adLen>0)
+	if(list!=NULL && len>0 && id>0 && pCounter!=NULL)
 	{
-		for(int i=0;i<adLen;i++)
+		for(int i=0;i<len;i++)
 		{
-			if(adList[i].idCliente == id && adList[i].isActive == TRUE)
+			if(list[i].idCliente == id && list[i].isActive == TRUE && list[i].isEmpty==FALSE )
 			{
 				counter++;
 			}
 		}
 		*pCounter = counter;
-		retornar = 0;
+		retorno = 0;
 	}
-	return retornar;
+	return retorno;
 }
-
 /**
- * \brief Function to count how many paused ads have an Publicacion array
- * \param Publicacion *list: Pointer to an Publicacion array
+ * \brief _counterPaused: Function to count how many paused ads have the array.
+ * \param Publicacion *list: Pointer to  array.
  * \param int len: Length of the array
- * \param int *pCounter: Pointer of the counter
+ * \param int *pCounter: Pointer to the memory  where write the value.
  * \return (-1) if something went wrong, (0) if everything is OK
  */
-int publicacion_counterPaused(Publicacion *adList, int adLen, int *pCounter)
+int publicacion_counterPaused(Publicacion *list, int len, int *pCounter)
 {
-	int retornar=-1;
+	int retorno=-1;
 	int counter=0;
-	if(adList!=NULL && adLen>0)
+	if(list!=NULL && len>0 && pCounter!=NULL)
 	{
-		for(int i=0;i<adLen;i++)
+		for(int i=0;i<len;i++)
 		{
-			if(adList[i].isActive == FALSE)
+			if(list[i].isActive == FALSE)
 			{
 				counter++;
-				retornar=0;
+				retorno=0;
 			}
 		}
 		*pCounter = counter;
 	}
-	return retornar;
+	return retorno;
 }
-
 /**
- * \brief Function to search in the publicacion array for an no empty field
- * \param Publicacion *list: Pointer to an Publicacion array
+ * \brief _searchForNoEmpty: Function to search in the publicacion array for no empty field.
+ * \param Publicacion *list: Pointer to array.
  * \param int len: Length of the array
  * \return (-1) if something went wrong, (0) if everything is OK
  */
 int publicacion_searchForNoEmpty(Publicacion *list, int len)
 {
-	int retornar = -1;
+	int retorno = -1;
 	if(list != NULL && len > 0)
 	{
 		for(int i=0; i<len; i++)
 		{
 			if(list[i].isEmpty == FALSE)
 			{
-				retornar = 0;
+				retorno = 0;
 				break;
 			}
 		}
 	}
-	return retornar;
+	return retorno;
 }
-
 /**
- * \brief Function to search in the publicacion array if there's any active
- * \param Publicacion *list: Pointer to an Publicacion array
+ * \brief _searchForActive: Function to search in the publicacion array if there's any active
+ * \param Publicacion *list: Pointer to array.
  * \param int len: Length of the array
  * \return (1) is there any active field TRUE or (0) if not
  */
 int publicacion_searchForActive(Publicacion *list, int len)
 {
-	int retornar = 0;
+	int retorno = 0;
 	if(list != NULL && len > 0)
 	{
 		for(int i=0; i<len; i++)
 		{
 			if(list[i].isActive == TRUE)
 			{
-				retornar = 1;
+				retorno = 1;
 				break;
 			}
 		}
 	}
-	return retornar;
+	return retorno;
 }
-
 /**
- * \brief Function to init isEmpty to TRUE and -1 to ID field of an Publicacion array
- * \param Publicacion *list: Pointer to an Publicacion array
- * \param int len: Length of the array
- * \return (-1) if something went wrong, (0) if everything is OK
- */
-int publicacion_init(Publicacion* list, int len)
-{
-	int retornar = -1;
-	if(list != NULL && len > 0)
-	{
-		for(int i=0;i<len;i++)
-		{
-			list[i].isEmpty = TRUE;
-			list[i].isActive = -1;
-			list[i].id = -1;
-		}
-		retornar = 0;
-	}
-	return retornar;
-}
-
-/**
- * \brief Function that returns the first index found on an Publicacion array that is empty
- * \param Publicacion *list: Pointer to an Publicacion array
- * \param int len: Length of the array
- * \param int *pIndex: pointer of the index
- * \return (-1) if something went wrong, (0) if everything is OK
- */
-int publicacion_searchEmpty(Publicacion *list, int len, int *pIndex)
-{
-	int retornar = -1;
-	if(list != NULL)
-	{
-		for(int i = 0; i < len; i++)
-		{
-			if(list[i].isEmpty == TRUE && list[i].id == -1)
-			{
-				retornar = 0;
-				*pIndex = i;
-				break;
-			}
-		}
-	}
-	return retornar;
-}
-
-/**
- * \brief Function to auto-generate an ID
- * \return the id
- */
-static int idGenerate(void)
-{
-	static int id=0;
-	id = id+1;
-	return id;
-}
-
-/**
- * \brief Function to find an Publicacion index receiving an id
- * \param Publicacion *list: Pointer to an Publicacion array
- * \param int len: Length of the array
- * \param int id: receive the id to be searched
- * \return the index or (-1) if something went wrong
- */
-int publicacion_findById(Publicacion *list, int len, int id, int *pIndex)
-{
-	int retornar = -1;
-	if(list != NULL && len > 0 && id > 0)
-	{
-		for(int i=0; i < len; i++)
-		{
-			if(list[i].id==id && list[i].isEmpty==FALSE && (list[i].isActive==TRUE || list[i].isActive==FALSE))
-			{
-				*pIndex = i;
-				retornar = 0;
-				break;
-			}
-		}
-	}
-	return retornar;
-}
-
-/**
- * \brief Function to find an Publicacion index receiving a client ID
- * \param Publicacion *list: Pointer to an Publicacion array
- * \param int len: Length of the array
- * \param int id: receive the id to be searched
- * \return the index or (-1) if something went wrong
+ * \brief _findByClientId: Function to find an Publicacion index receiving a client ID.
+ * \param Publicacion *list: Pointer to array.
+ * \param int len: Length of the array.
+ * \param int id: receive the id to be searched.
+ * \return the index or (-1) if something went wrong.
  */
 int publicacion_findByClientId(Publicacion *list, int len, int id)
 {
-	int retornar = -1;
+	int retorno = -1;
 	if(list != NULL && len > 0 && id > 0)
 	{
 		for(int i=0;i<len;i++)
 		{
 			if(list[i].idCliente==id && list[i].isEmpty==FALSE && (list[i].isActive==TRUE || list[i].isActive==FALSE))
 			{
-				retornar = i;
+				retorno = i;
 				break;
 			}
 		}
 	}
-	return retornar;
+	return retorno;
 }
-
 /**
- * \brief Function to compare sectors counter and find the max
- * \param Publicacion *list: Pointer to an Publicacion array
+ * \brief _rubroMax: Function to compare rubro counter and find the max.
+ * \param Publicacion *list: Pointer to array.
  * \param int len: Length of the array
  * \return the index or (-1) if something went wrong
  */
 int publicacion_rubroMax(Publicacion *list, int len)
 {
-	int retornar=-1;
-	int currentCounter=0;
+	int retorno=-1;
+	int currentCounter;
 	int maxCounter;
-	Publicacion aux;
+	Publicacion bufferAux;
 	if(list!=NULL && len>0)
 	{
 		for(int i=0;i<len;i++)
@@ -448,27 +555,26 @@ int publicacion_rubroMax(Publicacion *list, int len)
 				if(i==0 || currentCounter>maxCounter)
 				{
 					maxCounter = currentCounter;
-					aux = list[i];
-					retornar=0;
+					bufferAux = list[i];
+					retorno=0;
 				}
 			}
 		}
-		printf("\nEl rubro con mas avisos es el: %d\n", aux.rubro);
+		printf("\n  El rubro con mas avisos es el: %d y tiene %d avisos.\n",bufferAux.rubro,maxCounter);
 	}
-	return retornar;
+	return retorno;
 }
-
 /**
- * \brief Function to count how many times a sector is repeated in the Publicacion array
- * \param Publicacion *list: Pointer to an Publicacion array
+ * \brief _equalRubro: Function to count how many times a sector is repeated in the array.
+ * \param Publicacion *list: Pointer to array.
  * \param int len: Length of the array
  * \param int sector: receive the sector to be searched
- * \param int *pCounter: pointer of the counter
+ * \param int *pCounter: Pointer to the memory  where write the value.
  * \return the index or (-1) if something went wrong
  */
 int publicacion_equalRubro(Publicacion *list, int len, int rubro, int *pCounter)
 {
-	int retornar=-1;
+	int retorno=-1;
 	int counter=0;
 	if(list!=NULL && len>0)
 	{
@@ -477,13 +583,22 @@ int publicacion_equalRubro(Publicacion *list, int len, int rubro, int *pCounter)
 			if(list[i].isEmpty == FALSE && list[i].rubro == rubro)
 			{
 				counter++;
-				retornar=0;
+				retorno=0;
 			}
 		}
 		*pCounter = counter;
 	}
-	return retornar;
+	return retorno;
 }
+/**
+ * \brief_altaForzada: Automatically creates a new profile .
+ * \param Publicacion * list: Pointer to the array.
+ * \param int len: Array length.
+ * \param int idCliente: Id assigned.
+ * \param char* texto: text of the publication.
+ * \param int rubro: Rubro of the publication.
+ * \return (-1) Error / (0) Ok
+ */
 int publicacion_altaForzada(Publicacion* list, int len,int idCliente,char* texto,int rubro)
 {
 	int retorno = -1;
@@ -493,14 +608,15 @@ int publicacion_altaForzada(Publicacion* list, int len,int idCliente,char* texto
 	{
 		if(publicacion_searchEmpty(list,len,&indice) == 0)
 		{
-			    buffer.idCliente= idCliente;
-				strncpy(buffer.texto,texto,SIZE_TEXT);
-				buffer.rubro= rubro;
-				buffer.id= idGenerate();
-				list[indice] = buffer;
-				list[indice].isEmpty = FALSE;
-				list[indice].isActive =TRUE ;
-				retorno=0;
+			buffer.id= newIdGenerate();
+			buffer.idCliente= idCliente;
+			strncpy(buffer.texto,texto,SIZE_TEXT);
+			buffer.rubro= rubro;
+			list[indice] = buffer;
+			list[indice].isEmpty = FALSE;
+			list[indice].isActive =TRUE ;
+
+			retorno=0;
 	    }
 	}
 	return retorno ;

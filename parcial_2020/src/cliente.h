@@ -31,6 +31,6 @@ int cliente_modifify(Cliente* list,int len);
 int cliente_remove(Cliente* list,int len);
 int cliente_countId(Cliente* list,int len,int* quantityId);
 int cliente_altaForzada(Cliente * list, int len,char*cuit, char* nombre,char* apellido);
-
-
+int cliente_findByCuit(Cliente* list, int len, int* pIndex, char* cuitCliente);
+int cliente_findIdByCuit(Cliente* list, int len,char* cuitCliente, int* pIdCliente);
 #endif /* CLIENTE_H_ */

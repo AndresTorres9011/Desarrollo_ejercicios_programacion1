@@ -171,10 +171,10 @@ int publicacion_pause(Publicacion* list,int len,Cliente* listDos,int lenDos)
 
 	if(list != NULL && len>0 && listDos != NULL && lenDos>0 && publicacion_printActive(list, len)==0)
 	{
-		if(!utn_getNumeroString("\n\n  Ingrese id de publicacion a pausar:","  Error Reingrese id publicacion a !",&idPausa, CANTIDAD_REINTENTOS, MIN_ID,MAX_ID) &&
+		if(!utn_getNumeroString("\n\n  Ingrese id de publicacion a pausar:","  Error Reingrese id publicacion!",&idPausa,CANTIDAD_REINTENTOS, MIN_ID,MAX_ID) &&
 						!publicacion_findById(list,len,&index,idPausa) && list[index].isActive==TRUE && !publicacion_printClientById(list,len,listDos,lenDos,idPausa))
 		{
-			if(utn_getNumeroString("\n\n  Quiere pausar esta publicidad? (1-SI O 2-NO): " , "\nERROR ", &option, CANTIDAD_REINTENTOS, 1, 2)==0 && option == 1)
+			if(utn_getNumeroString("\n\n  Quiere pausar esta publicidad? (1-SI O 2-NO): " ,"\n  ERROR ", &option,CANTIDAD_REINTENTOS, 1, 2)==0 && option == 1)
 		    {
 					if(list[index].isActive == TRUE)
 					{
@@ -185,7 +185,7 @@ int publicacion_pause(Publicacion* list,int len,Cliente* listDos,int lenDos)
 			}
 			else
 			{
-				printf("\n  OPCION INCORRECTA \n");
+				printf("\n  PUBLICIDAD NO PAUSADA \n");
 			}
 
 		}
@@ -217,10 +217,10 @@ int publicacion_reanude(Publicacion* list,int len,Cliente* listDos,int lenDos)
 
 	if(list != NULL && len>0 && listDos != NULL && lenDos>0 && publicacion_printPause(list, len)==0)
 	{
-		if(!utn_getNumeroString("\n\n  Ingrese id de publicacion a reanudar:","  Error Reingrese id publicacion a !",&idPausa, CANTIDAD_REINTENTOS, MIN_ID,MAX_ID) &&
+		if(!utn_getNumeroString("\n\n  Ingrese id de publicacion a reanudar:","  Error Reingrese id publicacion!",&idPausa,CANTIDAD_REINTENTOS, MIN_ID,MAX_ID) &&
 		   !publicacion_findById(list,len,&index,idPausa)&& list[index].isActive==FALSE && !publicacion_printClientById(list,len,listDos,lenDos,idPausa))
 		{
-			if(utn_getNumeroString("\n\n  Quiere reanudar esta publicidad? (1-SI O 2-NO): ","\nERROR ", &option, CANTIDAD_REINTENTOS,1,2)==0 && option == 1 )
+			if(utn_getNumeroString("\n\n  Quiere reanudar esta publicidad? (1-SI O 2-NO): ","\n  ERROR\n ", &option,CANTIDAD_REINTENTOS,1,2)==0 && option == 1 )
 		    {
 					if(list[index].isActive == FALSE)
 					{
@@ -230,7 +230,7 @@ int publicacion_reanude(Publicacion* list,int len,Cliente* listDos,int lenDos)
 			}
 			else
 			{
-				printf("\n  OPCION INCORRECTA \n");
+				printf("\n  PUBLICIDAD NO REANUDADA \n");
 			}
 		}
 		else
@@ -262,7 +262,7 @@ int publicacion_printClientById(Publicacion *list, int len, Cliente *listDos, in
 		publicacion_findByIdpcliente(list,len,listDos,lenDos,id,&auxIdCliente)==0 &&
 		cliente_findById(listDos, len,&index,auxIdCliente)==0)
 	{
-		printf("\n  Cliente:\n  -IDc: %d  -Nombre: %s - Apellido: %s - Cuit: %s"
+		printf("\n  Cliente:\n  -IDC: %d  -Nombre: %s - Apellido: %s - Cuit: %s"
 			   ,listDos[index].idCliente,listDos[index].nombre,listDos[index].apellido,listDos[index].cuit);
 		retorno = 0;
 	}
@@ -286,7 +286,7 @@ int publicacion_findByIdpcliente(Publicacion* list, int len, Cliente *listDos, i
 	{
 		for(i=0;i<len; i++)
 		{
-			if(list[i].isEmpty==FALSE && list[i].id == id)
+			if(list[i].isEmpty==FALSE && list[i].id == id && (list[i].isActive==TRUE || list[i].isActive==FALSE))
 			{
 				*pIdCliente = list[i].idCliente;
 				retorno = 0;
@@ -309,7 +309,7 @@ int publicacion_printAll(Publicacion *list, int len)
 	{
 		for(int i=0;i<len;i++)
 		{
-			if(list[i].isEmpty == FALSE)
+			if(list[i].isEmpty == FALSE && (list[i].isActive==TRUE || list[i].isActive==FALSE))
 			{
 				if (list[i].isActive == TRUE)
 				{
@@ -319,7 +319,7 @@ int publicacion_printAll(Publicacion *list, int len)
 				{
 					strncpy(strEstado,"PAUSADA",8);
 				}
-				printf("\n  ID: %d - Estado: %s - texto: %s",list[i].id,strEstado,list[i].texto);
+				printf("\n  -IDP: %d -Estado: %s -Texto: %s -Rubro: %d -IDC: %d",list[i].id,strEstado,list[i].texto,list[i].rubro,list[i].idCliente);
 				retorno = 0;
 			}
 		}
@@ -346,11 +346,7 @@ int publicacion_printActive(Publicacion *list, int len)
 				{
 					strncpy(strEstado,"ACTIVA",8);
 				}
-				else
-				{
-					strncpy(strEstado,"PAUSADA",8);
-				}
-				printf("\n  ID: %d - Estado: %s -Texto: %s  -IDc: %d",list[i].id,strEstado,list[i].texto,list[i].idCliente);
+				printf("\n  -IDP: %d -Estado: %s -Texto: %s -Rubro: %d -IDC: %d",list[i].id,strEstado,list[i].texto,list[i].rubro,list[i].idCliente);
 				retorno = 0;
 			}
 		}
@@ -373,15 +369,11 @@ int publicacion_printPause(Publicacion *list, int len)
 		{
 			if(list[i].isEmpty == FALSE && list[i].isActive==FALSE )
 			{
-				if (list[i].isActive == TRUE)
-				{
-					strncpy(strEstado,"ACTIVA",8);
-				}
-				else
+				if (list[i].isActive == FALSE)
 				{
 					strncpy(strEstado,"PAUSADA",8);
 				}
-				printf("\n  ID: %d - Estado: %s - texto: %s",list[i].id,strEstado,list[i].texto);
+				printf("\n  -IDP: %d -Estado: %s -Texto: %s -Rubro: %d -IDC: %d",list[i].id,strEstado,list[i].texto,list[i].rubro,list[i].idCliente);
 				retorno = 0;
 			}
 		}
@@ -399,14 +391,14 @@ int publicacion_printPause(Publicacion *list, int len)
 int publicacion_cantidadAvisos(Publicacion* list,int len,int id,int *pResultado)
 {
 	int retorno=-1;
-	int indiceAviso;
+	int indice;
 	int contadorAvisos=0;
 
 	if(list!=NULL && len>0 && id>0 && pResultado!=NULL)
 	{
-		for(indiceAviso=0;indiceAviso<len;indiceAviso++)
+		for(indice=0;indice<len;indice++)
 		{
-			if(list[indiceAviso].isEmpty==FALSE && id==list[indiceAviso].idCliente && list[indiceAviso].isActive==TRUE)
+			if(list[indice].isEmpty==FALSE && list[indice].idCliente==id && (list[indice].isActive==TRUE || list[indice].isActive==FALSE))
 			{
 				contadorAvisos++;
 				retorno=0;
@@ -483,7 +475,7 @@ int publicacion_counterPaused(Publicacion *list, int len, int *pCounter)
 	{
 		for(int i=0;i<len;i++)
 		{
-			if(list[i].isActive == FALSE)
+			if(list[i].isActive == FALSE && list[i].isEmpty==FALSE)
 			{
 				counter++;
 				retorno=0;
@@ -606,7 +598,7 @@ int publicacion_equalRubro(Publicacion *list, int len, int rubro, int *pCounter)
 	{
 		for(int i=0;i<len;i++)
 		{
-			if(list[i].isEmpty == FALSE && list[i].rubro == rubro)
+			if(list[i].isEmpty == FALSE && list[i].rubro == rubro && (list[i].isActive==TRUE || list[i].isActive==FALSE))
 			{
 				counter++;
 				retorno=0;
@@ -641,7 +633,6 @@ int publicacion_altaForzada(Publicacion* list, int len,int idCliente,char* texto
 			list[indice] = buffer;
 			list[indice].isEmpty = FALSE;
 			list[indice].isActive =TRUE ;
-
 			retorno=0;
 	    }
 	}

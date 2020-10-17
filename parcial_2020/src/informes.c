@@ -187,30 +187,18 @@ int info_report(Cliente *listUno, int lenUno, Publicacion *listDos, int lenDos)
 						{
 							retornar=0;
 						}
-						else
-						{
-							printf("\n  NO HAY AVISOS CARGADOS\n");
-						}
 					break;
 				    case 4:
 				    	if(informe_imprimirClienteMayorCantidadAvisosActivos(listDos,lenDos,listUno,lenUno)==0)
 				    	{
 				    		retornar=0;
 				    	}
-				    	else
-				    	{
-				    		printf("\n  NO HAY AVISOS ACTIVOS\n");
-				    	}
 					break;
 				    case 5:
 				    	if(informe_imprimirClienteMayorCantidadAvisosPausados(listDos,lenDos,listUno,lenUno)==0)
 				    	{
 				    		retornar=0;
-						}
-						else
-						{
-							printf("\n  NO HAY AVISOS PAUSADOS\n");
-						}
+				    	}
 					break;
 				}
 			}
@@ -229,29 +217,36 @@ int info_report(Cliente *listUno, int lenUno, Publicacion *listDos, int lenDos)
 int informe_imprimirClienteMayorCantidadAvisos(Publicacion* listUno,int lenUno,Cliente* listDos,int lenDos)
 {
 	int retorno=-1;
-	int indiceCliente;
+	int indice;
 	int cantidadAvisos;
 	int maximoAvisos;
 	int idMaximoAvisos;
-	int auxIndiceMaxAvisos;
+	int auxIndiceCliente;
 
 	if(listUno!=NULL && lenUno>0 && listDos!=NULL && lenDos>0)
 	{
-		for(indiceCliente=0;indiceCliente<lenDos;indiceCliente++)
+		for(indice=0;indice<lenDos;indice++)
 		{
-			if(publicacion_cantidadAvisos(listUno,lenUno,listDos[indiceCliente].idCliente,&cantidadAvisos)==0)
+			if(publicacion_cantidadAvisos(listUno,lenUno,listUno[indice].idCliente,&cantidadAvisos)==0)
 			{
-				if(indiceCliente==0 || maximoAvisos<cantidadAvisos)
+				if(indice==0 || cantidadAvisos>maximoAvisos)
 				{
 					maximoAvisos=cantidadAvisos;
-					idMaximoAvisos=listDos[indiceCliente].idCliente;
+					idMaximoAvisos=listUno[indice].idCliente;
 					retorno=0;
 				}
 			}
 		}
-		cliente_findById(listDos,lenDos,&auxIndiceMaxAvisos,idMaximoAvisos);
-		cliente_printById(listDos,lenDos,auxIndiceMaxAvisos);
-		printf("\n    Es el cliente con mas avisos activos, la cantidad de avisos publicados es: %d\n",maximoAvisos);
+		if(retorno==0 && maximoAvisos>0)
+		{
+			cliente_findById(listDos,lenDos,&auxIndiceCliente,idMaximoAvisos);
+			cliente_printById(listDos,lenDos,auxIndiceCliente);
+			printf("\n    Es el cliente con mas avisos, la cantidad de avisos publicados es: %d\n",maximoAvisos);
+		}
+		else
+		{
+			printf("\n  NO HAY AVISOS CARGADOS\n");
+		}
 	}
 	return retorno;
 }
@@ -266,29 +261,36 @@ int informe_imprimirClienteMayorCantidadAvisos(Publicacion* listUno,int lenUno,C
 int informe_imprimirClienteMayorCantidadAvisosActivos(Publicacion* listUno,int lenUno,Cliente* listDos,int lenDos)
 {
 	int retorno=-1;
-	int indiceCliente;
+	int indice;
 	int cantidadAvisos;
 	int maximoAvisos;
 	int idMaximoAvisos;
-	int auxIndiceMaxAvisos;
+	int auxIndiceCliente;
 
 	if(listUno!=NULL && lenUno>0 && listDos!=NULL && lenDos>0)
 	{
-		for(indiceCliente=0;indiceCliente<lenDos;indiceCliente++)
+		for(indice=0;indice<lenDos;indice++)
 		{
-			if(publicacion_counterActivePublicationClient(listUno,lenUno,listDos[indiceCliente].idCliente,&cantidadAvisos)==0)
+			if(publicacion_counterActivePublicationClient(listUno,lenUno,listUno[indice].idCliente,&cantidadAvisos)==0)
 			{
-				if(indiceCliente==0 || maximoAvisos<cantidadAvisos)
+				if(indice==0 || maximoAvisos<cantidadAvisos)
 				{
 					maximoAvisos=cantidadAvisos;
-					idMaximoAvisos=listDos[indiceCliente].idCliente;
+					idMaximoAvisos=listUno[indice].idCliente;
 					retorno=0;
 				}
 			}
 		}
-		cliente_findById(listDos,lenDos,&auxIndiceMaxAvisos,idMaximoAvisos);
-		cliente_printById(listDos,lenDos,auxIndiceMaxAvisos);
-		printf("\n    Es el cliente con mas avisos activos, la cantidad de avisos publicados es: %d\n",maximoAvisos);
+		if(retorno==0 && maximoAvisos>0)
+		{
+			cliente_findById(listDos,lenDos,&auxIndiceCliente,idMaximoAvisos);
+			cliente_printById(listDos,lenDos,auxIndiceCliente);
+			printf("\n    Es el cliente con mas avisos activos, la cantidad de avisos es: %d\n",maximoAvisos);
+		}
+		else
+		{
+			printf("\n  NO HAY AVISOS ACTIVOS\n");
+		}
 	}
 	return retorno;
 }
@@ -303,29 +305,36 @@ int informe_imprimirClienteMayorCantidadAvisosActivos(Publicacion* listUno,int l
 int informe_imprimirClienteMayorCantidadAvisosPausados(Publicacion* listUno,int lenUno,Cliente* listDos,int lenDos)
 {
 	int retorno=-1;
-	int indiceCliente;
+	int indice;
 	int cantidadAvisos;
 	int maximoAvisos;
 	int idMaximoAvisos;
-	int auxIndiceMaxAvisos;
+	int auxIndiceCliente;
 
 	if(listUno!=NULL && lenUno>0 && listDos!=NULL && lenDos>0)
 	{
-		for(indiceCliente=0;indiceCliente<lenDos;indiceCliente++)
+		for(indice=0;indice<lenDos;indice++)
 		{
-			if(publicacion_counterPausedPublicationClient(listUno,lenUno,listDos[indiceCliente].idCliente,&cantidadAvisos)==0 && cantidadAvisos>0)
+			if(publicacion_counterPausedPublicationClient(listUno,lenUno,listUno[indice].idCliente,&cantidadAvisos)==0)
 			{
-				if(indiceCliente==0 || maximoAvisos<cantidadAvisos)
+				if(indice==0 || maximoAvisos<cantidadAvisos)
 				{
 					maximoAvisos=cantidadAvisos;
-					idMaximoAvisos=listDos[indiceCliente].idCliente;
+					idMaximoAvisos=listUno[indice].idCliente;
 					retorno=0;
 				}
 			}
 		}
-		cliente_findById(listDos,lenDos,&auxIndiceMaxAvisos,idMaximoAvisos);
-		cliente_printById(listDos,lenDos,auxIndiceMaxAvisos);
-		printf("\n    Es el cliente con mas avisos pausados, la cantidad de avisos es: %d\n",maximoAvisos);
+		if(retorno==0 && maximoAvisos>0)
+		{
+		    cliente_findById(listDos,lenDos,&auxIndiceCliente,idMaximoAvisos);
+			cliente_printById(listDos,lenDos,auxIndiceCliente);
+			printf("\n    Es el cliente con mas avisos pausados, la cantidad de avisos es: %d\n",maximoAvisos);
+		}
+		else
+		{
+			printf("\n  NO HAY AVISOS PAUSADOS\n");
+		}
 	}
 	return retorno;
 }

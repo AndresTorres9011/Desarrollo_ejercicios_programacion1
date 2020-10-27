@@ -282,7 +282,7 @@ int cliente_printAll(Cliente* list, int len)
  * \param int len: Array length.
  * \return (-1) Error / (0) Ok
  */
-int cliente_modifify(Cliente* list,int len)
+int cliente_modifify(Cliente* list[],int len)
 {
 	int retorno = -1;
 	int idModificar;

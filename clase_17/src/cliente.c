@@ -18,25 +18,42 @@
 
 static int newIdGenerate(void);
 
-
+Cliente* cliente_new(void)
+{
+	Cliente* p;
+	p=(Cliente*)malloc(sizeof(Cliente)*1);
+	if(p!=NULL)
+	{
+		//p->isEmpty=TRUE;
+		p->idCliente=0;
+		p->cuit[0]='\0';
+		p->nombre[0]='\0';
+		p->apellido[0]='\0';
+		return p;
+	}
+	else
+	{
+		return NULL;
+	}
+}
 Cliente* cliente_newConParametros(char* cuit,char* nombre,char*apellido)
 {
-	Cliente* pc=NULL;
+	Cliente* pC=NULL;
 	if(nombre!=NULL && cuit!=NULL && apellido!=NULL)
 	{
-		pc = (Cliente*)malloc(sizeof(Cliente));
-		if(pc!=NULL)
+		pC = (Cliente*)malloc(sizeof(Cliente));
+		if(pC!=NULL)
 		{
-			pc->idCliente=newIdGenerate();
+			pC->idCliente=newIdGenerate();
 			//buffer.idCliente= newIdGenerate();
-			pc->isEmpty=FALSE;
+			pC->isEmpty=FALSE;
 			//pc->name=name; MALLLL NAHHHHHH
-			strncpy(pc->cuit,cuit,sizeof(pc->cuit));//o sizeof(SIZE_CUIT)
-			strncpy(pc->nombre,nombre,sizeof(pc->nombre));//o sizeof(SIZE_NAME)
-			strncpy(pc->apellido,apellido,sizeof(pc->apellido));//o sizeof(SIZE_NAME)
+			strncpy(pC->cuit,cuit,sizeof(pC->cuit));//o sizeof(SIZE_CUIT)
+			strncpy(pC->nombre,nombre,sizeof(pC->nombre));//o sizeof(SIZE_NAME)
+			strncpy(pC->apellido,apellido,sizeof(pC->apellido));//o sizeof(SIZE_NAME)
 		}
 	}
-	return pc;
+	return pC;
 }
 void cliente_delete(Cliente* pc)
 {
@@ -113,21 +130,31 @@ int cliente_createNew(Cliente* list[], int len)
 	int indice;
 	int auxIndice;
 	Cliente buffer;
+	Cliente* pC;
 	if (list != NULL && len >0)
 	{
 		if (cliente_searchNull(list,len,&indice) == 0)
 		{
-			if(utn_getCuit("\n  Ingrese Cuit?","\n  Error no es un cuit valido",buffer.cuit,CANTIDAD_REINTENTOS,SIZE_CUIT) == 0 && buffer.isEmpty==FALSE &&
+			if(utn_getCuit("\n  Ingrese Cuit?","\n  Error no es un cuit valido",buffer.cuit,CANTIDAD_REINTENTOS,SIZE_CUIT) == 0 &&
 					cliente_findByCuit(list,len,&auxIndice,buffer.cuit)==-1)
 		    {
 					if (//utn_getCuit("\n  Ingrese Cuit?","\n  Error no es un cuit valido",buffer.cuit,CANTIDAD_REINTENTOS,SIZE_CUIT) == 0 &&
 						utn_getNombre("\n  Ingrese Nombre?","\n  Error no es un nombre valido",buffer.nombre,CANTIDAD_REINTENTOS,SIZE_NAME) == 0 &&
 						utn_getNombre("\n  Ingrese Apellido?","\n  Error no es un apellido valido",buffer.apellido,CANTIDAD_REINTENTOS,SIZE_NAME) == 0)
 					{
-						buffer.idCliente= newIdGenerate();
-						list[indice].isEmpty = FALSE;
-						list[indice] = buffer;
-						retorno=0;
+						//buffer.idCliente= newIdGenerate();
+						//list[indice].isEmpty = FALSE;
+						//list[indice] = buffer;
+						pC = cliente_newConParametros(buffer.cuit,buffer.nombre,buffer.apellido);
+						if(pC!=NULL)
+						{
+							list[indice]= pC;
+							retorno=0;
+						}
+						else
+						{
+							printf("  ESPACIO DE MEMORIA LLENO");
+						}
 					}
 					else
 					{
@@ -210,7 +237,7 @@ int cliente_findIdByCuit(Cliente* list, int len,char* cuitCliente, int* pIdClien
  * \param int id: Id received to search position.
  * \return (-1) Error / (0) Ok
  */
-int cliente_findById(Cliente* list, int len, int* pIndex, int idCliente)
+int cliente_findById(Cliente* list[], int len, int* pIndex, int idCliente)
 {
     int retorno = -1;
 
@@ -218,9 +245,9 @@ int cliente_findById(Cliente* list, int len, int* pIndex, int idCliente)
     {
         for (int i = 0; i < len; i++)
         {
-            if(list[i].isEmpty == FALSE )
+            if(list[i] != NULL )
             {
-                if(list[i].idCliente == idCliente)
+                if(list[i]->idCliente == idCliente)
                 {
                    *pIndex = i;
                    retorno = 0;
@@ -258,7 +285,7 @@ int cliente_printById(Cliente* list, int len, int index)
  * \param int len: Array length..
  * \return (-1) Error / (0) Ok
  */
-int cliente_printAll(Cliente* list, int len)
+int cliente_printAll(Cliente* list[], int len)
 {
 	int retorno = -1;
 
@@ -266,10 +293,10 @@ int cliente_printAll(Cliente* list, int len)
 	{
 		for(int i=0;i<len;i++)
 		{
-			if(list[i].isEmpty == FALSE)
+			if(list[i] != NULL)
 			{
 				printf("\n  -IDC: %d -Cuit de cliente: %s -Nombre: %s -Apellido: %s",
-						list[i].idCliente,list[i].cuit,list[i].nombre, list[i].apellido);
+						list[i]->idCliente,list[i]->cuit,list[i]->nombre, list[i]->apellido);
 				retorno = 0;
 			}
 		}
@@ -301,9 +328,11 @@ int cliente_modifify(Cliente* list[],int len)
 					utn_getNombre("\n  Ingrese Apellido?","\n  Error no es un apellido valido",buffer.apellido,CANTIDAD_REINTENTOS,SIZE_NAME) == 0)
 				{
 					//bufferAlumno.isEmpty = FALSE;
-					buffer.idCliente= list[index].idCliente; //generarIdNuevo(); // NOOOOOOOOO
-					list[index] = buffer;
-					list[index].isEmpty = FALSE;
+					buffer.idCliente=list[index]->idCliente; //generarIdNuevo(); // NOOOOOOOOO
+					strncpy(list[index]->cuit,buffer.cuit,sizeof(list[index]->cuit));//o sizeof(SIZE_CUIT)
+					strncpy(list[index]->nombre,buffer.nombre,sizeof(list[index]->nombre));//o sizeof(SIZE_NAME)
+					strncpy(list[index]->apellido,buffer.apellido,sizeof(list[index]->apellido));//o sizeof(SIZE_NAME)
+					//list[index].isEmpty = FALSE;
 					retorno = 0;
 				}
 	       }
@@ -322,7 +351,7 @@ int cliente_modifify(Cliente* list[],int len)
  * \param int index: is the position from which the data is deleted.
  * \return int Return (-1) if Error [Invalid length or NULL pointer o] - (0) if Ok
  */
-int cliente_remove(Cliente* list,int len )
+int cliente_remove(Cliente* list[],int len )
 {
 	int retorno = -1;
 	int idBaja;
@@ -336,10 +365,14 @@ int cliente_remove(Cliente* list,int len )
 		{
 			if(cliente_findById(list,len,&index,idBaja)==0)
 			{
-				if(list[index].isEmpty == FALSE)
+				if(list[index] != NULL)
 				{
+					// borro cliente posicion "index correspondiente a idBaja"
+					//1) free en direccion de mem de cliente
+					cliente_delete(list[index]);
+					//2) poner null en array
 					//BAJA LOGICA DE ID
-					list[index].isEmpty = TRUE;
+					list[index] = NULL;
 					retorno = 0;
 				}
 			}
@@ -391,14 +424,14 @@ int cliente_altaForzada(Cliente* list[], int len,char*cuit, char* nombre,char* a
 {
 	int retorno = -1;
 	int indice;
-	Cliente* pc;
+	Cliente* pC;
 	//Cliente buffer;
 	if (list != NULL && len >0 && cuit!=NULL && nombre!=NULL && apellido!=NULL)
 	{
 		if(cliente_searchNull(list,len,&indice) == 0)
 		{
-			pc = cliente_newConParametros(cuit,nombre,apellido);
-			list[indice]= pc;
+			pC = cliente_newConParametros(cuit,nombre,apellido);
+			list[indice]= pC;
 			retorno=0;
 		}
 	}

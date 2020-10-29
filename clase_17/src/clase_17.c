@@ -76,7 +76,7 @@ int main(void)
 							   printf("\n  NO SE REALIZO ALTA \n");
 						   }
 						break;
-					/*case 2://Modificar Cliente
+					case 2://Modificar Cliente
 						if(cliente_modifify(arrayClientes,QTY_CLIENTES)==0)
 						{
 							printf("\n  MODIFICACION EXITOSA\n");
@@ -86,7 +86,10 @@ int main(void)
 							printf("\n  MODIFICACION INCORECTA\n");
 						}
 					break;
-					case 3://Baja Cliente
+					case 3:
+						cliente_printAll(arrayClientes,QTY_CLIENTES);
+					break;
+					/*case 3://Baja Cliente
 					    if(info_removeClientById(arrayClientes,QTY_CLIENTES,arrayPublicacion,QTY_PUBLICACIONES)==0)
 					    {
 							 printf("\n  BAJA EXITOSA\n");

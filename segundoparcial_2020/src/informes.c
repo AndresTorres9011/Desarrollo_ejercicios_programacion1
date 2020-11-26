@@ -16,6 +16,15 @@
 #include "ventas.h"
 #include "informes.h"
 
+/**
+ * \brief info__report: Function to print each ad that a client has (searched by ID).
+ * \param Cliente *listUno: Pointer to  array.
+ * \param int lenUno: Length of the array
+ * \param Publicacion *listDos: Pointer to array.
+ * \param int lenDos: Length of the array.
+ * \param int id: receive the ID to be search.
+ * \return (-1) if something went wrong, (0) if everything is OK
+ */
 int informes_report(LinkedList* listaCliente, LinkedList* listaVenta)
 {
 	int retornar=-1;
@@ -52,6 +61,15 @@ int informes_report(LinkedList* listaCliente, LinkedList* listaVenta)
 	}
 	return retornar;
 }
+/**
+ * \brief informe_clienteMasAfichesVendidos: Function to print each ad that a client has (searched by ID).
+ * \param Cliente *listUno: Pointer to  array.
+ * \param int lenUno: Length of the array
+ * \param Publicacion *listDos: Pointer to array.
+ * \param int lenDos: Length of the array.
+ * \param int id: receive the ID to be search.
+ * \return (-1) if something went wrong, (0) if everything is OK
+ */
 int informe_clienteMasAfichesVendidos(LinkedList* listaCliente, LinkedList* listaVenta)//clientMaxPosterQty
 {
 	int retornar=-1;
@@ -88,7 +106,15 @@ int informe_clienteMasAfichesVendidos(LinkedList* listaCliente, LinkedList* list
 	}
 	return retornar;
 }
-
+/**
+ * \brief informe_clienteMenosAfichesVendidos: Function to print each ad that a client has (searched by ID).
+ * \param Cliente *listUno: Pointer to  array.
+ * \param int lenUno: Length of the array
+ * \param Publicacion *listDos: Pointer to array.
+ * \param int lenDos: Length of the array.
+ * \param int id: receive the ID to be search.
+ * \return (-1) if something went wrong, (0) if everything is OK
+ */
 int informe_clienteMenosAfichesVendidos(LinkedList* listaCliente, LinkedList* listaVenta)
 {
 	int retornar=-1;
@@ -125,7 +151,15 @@ int informe_clienteMenosAfichesVendidos(LinkedList* listaCliente, LinkedList* li
 	}
 	return retornar;
 }
-
+/**
+ * \brief informe_masAfichesVendidos: Function to print each ad that a client has (searched by ID).
+ * \param Cliente *listUno: Pointer to  array.
+ * \param int lenUno: Length of the array
+ * \param Publicacion *listDos: Pointer to array.
+ * \param int lenDos: Length of the array.
+ * \param int id: receive the ID to be search.
+ * \return (-1) if something went wrong, (0) if everything is OK
+ */
 int informe_masAfichesVendidos(LinkedList* listaCliente, LinkedList* listaVenta)//sellMaxPosterQty
 {
 	int retornar=-1;

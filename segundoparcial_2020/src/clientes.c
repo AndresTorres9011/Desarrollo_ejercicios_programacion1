@@ -293,6 +293,7 @@ int cliente_print(void* this)
 			!cliente_getApellido(bufferClient, bufferLastName))
 		{
 			printf("\n%10s %15s %15s %15s\n","ID","CUIT","NOMBRE","APELLIDO\n");
+
 			printf("\n%10d %15s %15s %15s\n",bufferId,bufferCuit,bufferName,bufferLastName);
 			//printf("\nID: %d - Cuit: %s - Nombre: %s - Apellido: %s ", bufferId, bufferCuit, bufferName, bufferLastName);
 		}

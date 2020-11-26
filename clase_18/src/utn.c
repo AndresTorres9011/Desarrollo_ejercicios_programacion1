@@ -633,25 +633,27 @@ int utn_validarArrayLetras(char* cadena,int limite)
  * \param int limite: Indica la cantidad de caracteres maximos de la cadena.
  * \return (0) Indica que la cadena no es numerica / (1) Indica que la cadena es numerica.
  */
-static int esNumerica(char *cadena, int limite)
+static int esNumerica(char* cadena, int limite)
 {
-	int retorno=1;//VERDADERO
-	int i=0;
-
-	if(cadena[0]=='-')
+	int retorno = -1; // ERROR
+	int i;
+	if(cadena != NULL && limite > 0)
 	{
-		i=1;
-	}
-	if(cadena!=NULL && strlen(cadena)>0)
-	{
-		for(;i<=limite && cadena[i]!='\0';i++)
+		retorno = 1; // VERDADERO
+		for(i=0;i<limite && cadena[i] != '\0';i++)
 		{
-			if(cadena[i]>'9' || cadena[i]<'0')
+			if(i==0 && (cadena[i] == '+' || cadena[i] == '-'))
 			{
-				retorno=0;//FALSO
+				continue;
+			}
+			if(cadena[i] < '0'||cadena[i] > '9')
+			{
+				retorno = 0;
 				break;
 			}
+			//CONTINUE
 		}
+		//BREAK
 	}
 	return retorno;
 }
@@ -676,6 +678,20 @@ static int getInt(int* pResultado, int limite)
 		}
 	}
 	return retorno;
+}
+static int getInt(int* pResultado)
+{
+    int retorno=-1;
+    char bufferString[50];
+    if(	pResultado != NULL &&
+    	getString(bufferString,sizeof(bufferString)) == 0 &&
+    	esNumerica(bufferString,sizeof(bufferString)))
+	{
+		retorno=0;
+		*pResultado = atoi(bufferString) ;
+
+	}
+    return retorno;
 }
 /**
  * \brief getFloat: Valida la cadena recibida como parametro, convierte el texto a numero y lo devuelve como float.

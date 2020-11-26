@@ -35,6 +35,22 @@ Alumno* alumno_new(void)
 	return auxiliarP;*/
 	return (Alumno*)malloc(sizeof(Alumno));
 }
+Alumno* alumno_newConParametros(char* nombre,float altura,int id)
+{
+	Alumno* this = NULL;
+	this = alumno_new();
+	if(this != NULL && nombre != NULL)
+	{
+		if(	alumno_setNombre(this,nombre) == -1 ||
+			alumno_setId(this,id) == -1 ||
+			alumno_setAltura(this,altura) == -1)
+		{
+			alumno_delete(this);
+			this = NULL;
+		}
+	}
+	return this;
+}
 Alumno* alumno_newConParametros(char* nombre,float altura)
 {
 	Alumno* punteroAlumno=NULL;

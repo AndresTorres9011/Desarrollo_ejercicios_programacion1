@@ -1,0 +1,3 @@
+id,cuit,nombre,apellido,ventas_cobradas
+5,30-21345654-6,JULIANA,PORTELA,1
+6,20-94738818-1,CARLOS,FLORES,1

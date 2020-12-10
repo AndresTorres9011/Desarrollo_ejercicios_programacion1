@@ -476,19 +476,51 @@ int venta_estaCobrada(void* this)
 /*
  * \brief _compararId: Compare the sell´s id.
  * \param void* this : Pointer to venta.
- * \return int (-1) ERROR - (0,1) OK
+ * \return int (0) ERROR - (0,1) OK
  */
 int venta_compararId(void* this, void* id)
 {
 	int retorno=0;
 	int bufferIdCliente;
 	int bufferId = (int) id;
+	int bufferEstadoVenta;
 	Venta* bufferVenta = (Venta*) this;
-	if( !venta_getIdCliente(bufferVenta, &bufferIdCliente))
+	if( !venta_getIdCliente(bufferVenta, &bufferIdCliente) &&
+		!venta_getEstadoVenta(bufferVenta, &bufferEstadoVenta) &&
+		bufferEstadoVenta==1)
 	{
 		if(bufferIdCliente == bufferId)
 		{
 			retorno=1;
+		}
+	}
+	return retorno;
+}
+/*
+ * brief _acumularAfiches: Acumula la cantidad de afiches estado de venta cobrado.
+ * param void* pElement: puntero a un elemento de la lista enlazada de ventas
+ * param int idCliente: ID a buscar en la lista
+ * return Retorna la cantidad de afiches
+ */
+int venta_acumularAfiches(void* pElement,int idCliente)
+{
+	int retorno=0;
+	Venta* ventaAux=(Venta*)pElement;
+	int bufferEstadoVenta;
+	int idAux;
+	int cantidadAfiches;
+
+	if(ventaAux!=NULL && idCliente>0)
+	{
+		venta_getIdCliente(ventaAux,&idAux);
+		venta_getEstadoVenta(ventaAux,&bufferEstadoVenta);
+		venta_getCantidadAfiches(ventaAux,&cantidadAfiches);
+		if(idCliente==idAux)
+		{
+			if(bufferEstadoVenta==1)
+			{
+				retorno=cantidadAfiches;
+			}
 		}
 	}
 	return retorno;

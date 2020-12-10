@@ -87,7 +87,6 @@ int controller_loadClientFromText(char* path, LinkedList* clientList)
 	FILE* pFile;
 	if(path!=NULL && clientList!=NULL)
 	{
-
 		pFile = fopen(path, "r");
 		if(pFile!=NULL && !parser_clientFromText(pFile, clientList))
 		{
@@ -589,26 +588,6 @@ int controller_findByIdCliente(LinkedList* pArrayListCliente, int id)
 	}
 	return retorno;
 }
-/*int controller_findByIdCliente(LinkedList* clientList, int id)
-{
-	int retornar=-1;
-	int len = ll_len(clientList);
-	int bufferId;
-	Cliente* bufferClient;
-	if(clientList!=NULL && id>0)
-	{
-		for(int i=0;i<len;i++)
-		{
-			bufferClient = ll_get(clientList, i);
-			if(!cliente_getId(bufferClient,&bufferId) && bufferId == id)
-			{
-				retornar = i;
-				break;
-			}
-		}
-	}
-	return retornar;
-}*/
 /**
  * \brief _ListCliente: Print all the uploaded data.
  * \param LinkedList* pArrayListCliente: Pointer to the array.
@@ -788,7 +767,7 @@ int controller_cobrarVenta(LinkedList* listaCliente, LinkedList* listaVenta)
 				indexClient=controller_findByIdCliente(listaCliente, bufferId);
 				bufferClient = ll_get(listaCliente, indexClient);
 				cliente_print(bufferClient);
-				if( !utn_getNumber(&bufferInt,"\n\nDesea cobrar esta venta?\nPresione 1 para cobrar o 2 para volver atras: ", "\nERROR!", 1, 2,CANTIDAD_REINTENTOS) &&
+				if( !utn_getNumber(&bufferInt,"\n\nDesea cobrar esta venta?\nIngrese 1 para cobrar o 2 para volver atras: ", "\nERROR!", 1, 2,CANTIDAD_REINTENTOS) &&
 					bufferInt==1 && !venta_setEstadoVenta(bufferVenta, 1))
 				{
 					ll_set(listaVenta,indexVenta,bufferVenta);

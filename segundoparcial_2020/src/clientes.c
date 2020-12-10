@@ -269,6 +269,15 @@ int cliente_compareByName(void* thisA, void* thisB)
 	}
 	return retorno;
 }
+/**
+ * \brief headerClient: Imprime una cabecera.
+ * \param void*
+ * \return void Return
+ */
+void headerClient(void)
+{
+	printf("\n%10s %15s %15s %15s\n","ID","CUIT","NOMBRE","APELLIDO");
+}
 /*
  * \brief _print: Print data of one client..
  * \param void* this: Pointer to the first cliente to compare.
@@ -293,7 +302,6 @@ int cliente_print(void* this)
 			!cliente_getNombre(bufferClient, bufferName) &&
 			!cliente_getApellido(bufferClient, bufferLastName))
 		{
-			printf("\n%10s %15s %15s %15s\n","ID","CUIT","NOMBRE","APELLIDO\n");
 			printf("\n%10d %15s %15s %15s\n",bufferId,bufferCuit,bufferName,bufferLastName);
 			//printf("\nID: %d - Cuit: %s - Nombre: %s - Apellido: %s ", bufferId, bufferCuit, bufferName, bufferLastName);
 		}

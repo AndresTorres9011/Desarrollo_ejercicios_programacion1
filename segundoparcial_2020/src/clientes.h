@@ -42,6 +42,7 @@ int cliente_setApellido(Cliente* this, char* nombre);
 int cliente_getApellido(Cliente* this, char* nombre);
 
 int cliente_compareByName(void* thisA, void* thisB);
+void headerClient(void);
 int cliente_print(void* this);
 
 

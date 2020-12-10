@@ -253,7 +253,7 @@ int main()
 						}
 						else
 						{
-							printf("\nNO SE PUEDE GENERAR INFORME DE ESTADISTICAS\n");
+							printf("\nNO SE GENERO INFORME\n");
 						}
 					}
 					else

@@ -64,9 +64,11 @@ int parser_sellFromText(FILE* pFile , LinkedList* sellList)
 	{
 		do
 		{
-			if(fscanf(pFile, "%[^,],%[^,],%[^,],%[^,],%[^,],%[^\n]\n",bufferIdCliente, bufferIdVenta,bufferCantidadAfiches,bufferNombreArchivo,bufferZona, bufferEstadoVenta)==6)
+			if(fscanf(pFile, "%[^,],%[^,],%[^,],%[^,],%[^,],%[^\n]\n"
+					,bufferIdCliente, bufferIdVenta,bufferCantidadAfiches,bufferNombreArchivo,bufferZona, bufferEstadoVenta)==6)
 			{
-				bufferVenta = venta_newParametrosTxt(bufferIdCliente, bufferIdVenta, bufferCantidadAfiches, bufferNombreArchivo, bufferZona, bufferEstadoVenta);
+				bufferVenta = venta_newParametrosTxt(bufferIdCliente, bufferIdVenta, bufferCantidadAfiches,
+						                             bufferNombreArchivo, bufferZona, bufferEstadoVenta);
 				ll_add(sellList, bufferVenta);
 				retornar=0;
 			}

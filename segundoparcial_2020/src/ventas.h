@@ -56,5 +56,6 @@ int venta_getEstadoVentaTxt(Venta* this, char* estadoVenta);
 int venta_aCobrar(void* this);
 int venta_estaCobrada(void* this);
 int venta_compararId(void* this, void* id);
+int venta_acumularAfiches(void* pElement,int idCliente);
 
 #endif /* VENTAS_H_ */

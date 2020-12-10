@@ -43,6 +43,7 @@ int ll_sort(LinkedList* this, int (*pFunc)(void* ,void*), int order);
 int ll_map(LinkedList* this, int (*pFunc)(void*));
 int ll_filter(LinkedList* this, int (*pFunc)(void*));
 int ll_reduceInt(LinkedList* this, int (*pFunc)(void*, void*), int id,int* pResultado);
+int ll_reduce(LinkedList* this, int (pFunc)(void*,int),int pResultado);
 int ll_reduceFloat(LinkedList* this, int (*pFunc)(void*), float* pResultado);
 LinkedList* ll_subListFilter(LinkedList* this, int (*pFunc)(void*));
 
